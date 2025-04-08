@@ -1,1 +1,9 @@
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+
+/* Esto es para que con id se navegue de una forma mas limpia */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+}
