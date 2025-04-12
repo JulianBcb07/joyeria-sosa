@@ -1,3 +1,4 @@
+import Footer from './components/Footer'
 import './App.css'
 import CarrouselImg from './components/CarrouselImg'
 import Carusel from './components/Carusel'
@@ -21,12 +22,13 @@ function App() {
         <Navbar />
         <Inicio />
         <CarrouselImg />
-        <Carusel />
+        {/* <Carusel /> */}
+        <Productos />
         <Nosotros />
         <Contacto />
-        <Productos />
         <Novedades />
-        <MonitorSection />
+        {/* <MonitorSection /> */}
+        <Footer />
       </div>
     </main>
   )

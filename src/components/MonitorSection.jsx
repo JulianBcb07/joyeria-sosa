@@ -10,10 +10,9 @@ export const MonitorSection = () => {
 
                 {/* Izquierda */}
                 <div className='md:w-1/2 w-full'>
-                    <p className='text-green-400 font-semibold'>MONITOR</p>
+                    <p className='text-green-400 font-semibold uppercase'>¡Siguenos!</p>
 
-                    <h2 className='text-3xl md:text-4xl font-bold text-neutral-900 mt-4 mb-6 md:w-4/5'>Introducing best mobile
-                        carousels</h2>
+                    <h2 className='text-3xl md:text-4xl font-bold text-neutral-900 mt-4 mb-6 md:w-4/5'>Estas son nuestras redes sociales, te proporcionamos más información!</h2>
 
                     <p className='text-gray-600 mb-8'>Before the ship is really back. Round, round, all around the world. Round, all around the world. Round, all around the world. Round, all around the world.</p>
 
