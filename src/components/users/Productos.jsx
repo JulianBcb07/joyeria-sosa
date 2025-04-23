@@ -2,7 +2,9 @@ import React from 'react'
 
 // Intentar hacer las card de forma manual
 
-import slide1 from '../assets/slide1.jpg';
+import slide1 from '../../assets/slide1.jpg';
+import joyeria3 from '/joyeria3.jpg'
+import { Link } from 'react-router';
 
 const Productos = () => {
 
@@ -11,7 +13,7 @@ const Productos = () => {
             id: 1,
             brand: "Obtener",
             name: "Anillos",
-            image: slide1
+            image: joyeria3
         },
         {
             id: 2,
@@ -58,13 +60,13 @@ const Productos = () => {
             <div className='w-fit mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-5 justify-items-center justify-center gap-y-16 gap-x-16 mt-10 mb-5'>
                 {categories.map((categories) => (
                     <div key={categories.id} className='bg-white w-80 sm:w-72 md:w-62 lg:w-80 shadow-md rounded-xl hover:scale-105 duration-300 hover:shadow-xl'>
-                        <a href="">
+                        <Link to={'/categoria'}>
                             <img className='h-64 w-80 object-cover rounded-t-xl ' src={categories.image} alt="" />
                             <div className='px-4 py-5 w-72'>
                                 <span className='text-gray-400 mr-3 uppercase text-xs'>{categories.brand}</span>
                                 <p className='text-lg font-bold text-black truncate block capitalize'>{categories.name}</p>
                             </div>
-                        </a>
+                        </Link>
                     </div>
                 ))}
             </div>

@@ -1,14 +1,15 @@
 import React from 'react'
 
-import inicioImage from '../assets/inicio-joyeria.png';
+import inicioImage from '../../assets/inicio-joyeria.png';
+import { FaWhatsapp } from 'react-icons/fa'
 
 const Inicio = () => {
     return (
-        <section id='inicio' className='container mx-auto flex flex-col md:flex-row justify-between items-center pt-32 pb-6 px-4 sm:px-6 lg:px-8'>
+        <section id='inicio' className='container mx-auto flex flex-col md:flex-row justify-between items-center pt-28 lg:pt-32 pb-6 px-4 sm:px-6 lg:px-8'>
             {/* columna izquiera */}
             <div className='w-full md:w-1/2 space-y-8'>
                 <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold leading-tight'>
-                    Con [nombre] <span className='text-red-700 relative inline-block'>es un buen momento
+                    Con Sosa Joyería <span className='text-red-700 relative inline-block'>es un buen momento
                         <span className='absolute bottom-0 left-0 w-full h-0.5 bg-red-200/50 '></span>
                     </span> para elegir el detalle perfecto
 
@@ -16,6 +17,9 @@ const Inicio = () => {
                 </h1>
 
                 <p className='text-gray-600 text-lg md:text-xl max-w-xl'>Si te interesa algún producto, no dudes en contactarme para más informacion a mi WhatsApp</p>
+                <a className='bg-green-500 rounded-2xl shadow-lg flex items-center gap-4 justify-center text-white font-medium text-md w-60 py-3  text-center transition-transform hover:scale-105' href="">
+                    <FaWhatsapp className='size-6' /> Contactame
+                </a>
 
                 <div className='flex gap-3 max-w-md'>
                     {/* <input className='flex-1 px-6 py-4 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all' type="email" placeholder='Correo electronico' name="" id="" />

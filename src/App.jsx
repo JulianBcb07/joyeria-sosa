@@ -1,37 +1,54 @@
-import Footer from './components/Footer'
-import './App.css'
-import CarrouselImg from './components/CarrouselImg'
-import Carusel from './components/Carusel'
-import Contacto from './components/contacto'
-import Inicio from './components/Inicio'
-import { MonitorSection } from './components/MonitorSection'
-import Navbar from './components/Navbar'
-import Nosotros from './components/Nosotros'
-import Novedades from './components/Novedades'
-import Productos from './components/Productos'
+import { Route, Routes } from "react-router"
+import Home from "./pages/users/Home"
+import CategoriaProducto from "./pages/users/CategoriaProducto"
+import Producto from "./pages/users/Producto"
+import ScrollToTop from "./components/ScrollToTop"
+// Administrator components
+import Inicio from "./pages/admin/Inicio"
 
+import AdminLayout from "./layouts/AdminLayout"
+import CrearCategoria from "./pages/admin/categorias/CrearCategoria"
+import NuevaCategoria from "./pages/admin/categorias/NuevaCategoria"
+import NuevoProducto from "./pages/admin/productos/NuevoProducto"
+import EditarCategoria from "./pages/admin/categorias/EditarCategoria"
+import CrearProducto from "./pages/admin/productos/CrearProducto"
+import EditarProducto from "./pages/admin/productos/EditarProducto"
+import Configuracion from "./pages/admin/Configuracion"
+
+import AuthLayout from "./layouts/AuthLayout"
+import Login from "./pages/auth/Login"
 
 function App() {
 
 
   return (
-    // En esta parte se hace un blur en la esquina superior izquiera en el main de la pagina.
-    <main className='relative min-h-screen overflow-x-hidden'>
-      <div className='absolute -top-28 -left-28 w-[500px] h-[500px] bg-gradient-to-tr from-indigo-500/20 to-pink-500/20 rounded-full blur-[80px] -z-10'></div>
-      <div className='overflow-hidden '>
-        <Navbar />
-        <Inicio />
-        <CarrouselImg />
-        {/* <Carusel /> */}
-        <Productos />
-        <Nosotros />
-        <Contacto />
-        <Novedades />
-        {/* <MonitorSection /> */}
-        <Footer />
-      </div>
-    </main>
+    <>
+      <ScrollToTop />
+      <Routes>
+        {/* Rutas publicas */}
+        <Route path="/" element={<Home />} />
+        <Route path="/categoria" element={<CategoriaProducto />} />
+        <Route path="/categoria/producto" element={<Producto />} />
+
+        {/* Rutas privadas - admin */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Inicio />} />
+          <Route path="categorias" element={<CrearCategoria />} />
+          <Route path="categorias/nuevo" element={<NuevaCategoria />} />
+          <Route path="categorias/editar" element={<EditarCategoria />} />
+          <Route path="productos" element={<CrearProducto />} />
+          <Route path="productos/nuevo" element={<NuevoProducto />} />
+          <Route path="productos/editar" element={<EditarProducto />} />
+          <Route path="configuracion" element={<Configuracion />} />
+        </Route>
+
+        <Route element={<AuthLayout />}>
+          <Route path="admin/login" element={<Login />} />
+        </Route>
+
+      </Routes>
+    </>
   )
 }
 
-export default App
+export default App;

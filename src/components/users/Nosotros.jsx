@@ -6,7 +6,7 @@ const Nosotros = () => {
         {
             icon: "💞", // Replace with your actual icon component or image
             title: "Hecho con pasión",
-            description: "En Joyería-Sosa, cada pieza nace del arte tradicional yucateco fusionado con diseño contemporáneo. Transformamos metales y gemas en creaciones únicas que cuentan historias."
+            description: "Descubre el poder de una joya bien elegida: un toque de elegancia, un reflejo de tu personalidad y un simbolo de distinción."
         },
         {
             icon: "💫", // Replace with your actual icon component or image
@@ -22,7 +22,7 @@ const Nosotros = () => {
                     {/* el texto del encabezado */}
                     <div>
                         <p className='text-sm text-blue-600 font-medium mb-2'>Sobre nosotros</p>
-                        <h2 className='text-3xl md:w-4/5 w-full md:text-4xl font-bold text-gray-900'>Joyas con esencia Yucateca <span className='inline-block ml-2 animate-pulse'>💎✨</span></h2>
+                        <h2 className='text-3xl md:w-4/5 w-full md:text-4xl font-bold text-gray-900'>Deslumbra tu elegancia<span className='inline-block ml-2 animate-pulse'>💎✨</span></h2>
                     </div>
 
                     {/* Por que comprar con nosotros */}
