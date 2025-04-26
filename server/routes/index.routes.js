@@ -3,11 +3,10 @@ import { pool } from "../db.js";
 
 const router = Router();
 
-
-router.get('/ping', async (req, res) => {
-    const [rows] = await pool.query('SELECT * FROM users');
-    console.log(rows[0]);
-    res.json(rows[0]);
-})
+router.get("/ping", async (req, res) => {
+  const [rows] = await pool.query("SELECT * FROM users");
+  console.log(rows[0]);
+  res.json(rows[0]);
+});
 
 export default router;
