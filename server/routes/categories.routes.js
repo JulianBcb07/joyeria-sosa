@@ -8,6 +8,7 @@ import {
   updateCategory,
   deleteCategory,
 } from "../controllers/categories.controllers.js";
+import { uploadCategoryImage } from "../middlewares/uploadMiddleware.js";
 
 const routerCategories = Router();
 
@@ -18,10 +19,10 @@ routerCategories.get("/categorias", getCategories);
 routerCategories.get("/categoria/:id", getCategory);
 
 // crear una categoria
-routerCategories.post("/categoria", createCategory);
+routerCategories.post("/categoria", uploadCategoryImage, createCategory);
 
 // editar una categoria por su id
-routerCategories.put("/categoria/:id", updateCategory);
+routerCategories.put("/categoria/:id", uploadCategoryImage, updateCategory);
 
 // eliminar una categoria por su id
 routerCategories.delete("/categoria/:id", deleteCategory);

@@ -7,6 +7,7 @@ import {
   updateProduct,
   deleteProduct,
 } from "../controllers/products.controllers.js";
+import { uploadProductImage } from "../middlewares/uploadMiddleware.js";
 
 // Creamos las rutas para los cruds
 
@@ -20,10 +21,10 @@ routerProducts.get("/productos", getProducts);
 routerProducts.get("/producto/:id", getProduct);
 
 // crear un producto
-routerProducts.post("/producto", createProduct);
+routerProducts.post("/producto", uploadProductImage, createProduct);
 
 // actualizar un producto por el id
-routerProducts.put("/producto/:id", updateProduct);
+routerProducts.put("/producto/:id", uploadProductImage, updateProduct);
 
 // eliminar un producto por el id
 routerProducts.delete("/producto/:id", deleteProduct);
