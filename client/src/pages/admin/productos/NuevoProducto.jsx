@@ -1,6 +1,4 @@
 import React from 'react'
-import { BiSolidEditAlt } from "react-icons/bi";
-import { MdDelete } from "react-icons/md";
 // import Sidebar from '../../components/admin/Sidebar';
 
 

@@ -8,23 +8,34 @@ import {
   updateCategory,
   deleteCategory,
 } from "../controllers/categories.controllers.js";
-import { uploadCategoryImage } from "../middlewares/uploadMiddleware.js";
+import { uploadCategoryImage } from "../middlewares/upload.middleware.js";
+import { authRequired } from "../middlewares/auth.middleware.js";
 
 const routerCategories = Router();
 
 // obtener todas las categorias
-routerCategories.get("/categorias", getCategories);
+routerCategories.get("/categorias", authRequired, getCategories);
 
 // obtener una categoria por su id
-routerCategories.get("/categoria/:id", getCategory);
+routerCategories.get("/categoria/:id", authRequired, getCategory);
 
 // crear una categoria
-routerCategories.post("/categoria", uploadCategoryImage, createCategory);
+routerCategories.post(
+  "/categoria",
+  authRequired,
+  uploadCategoryImage,
+  createCategory
+);
 
 // editar una categoria por su id
-routerCategories.put("/categoria/:id", uploadCategoryImage, updateCategory);
+routerCategories.put(
+  "/categoria/:id",
+  authRequired,
+  uploadCategoryImage,
+  updateCategory
+);
 
 // eliminar una categoria por su id
-routerCategories.delete("/categoria/:id", deleteCategory);
+routerCategories.delete("/categoria/:id", authRequired, deleteCategory);
 
 export default routerCategories;

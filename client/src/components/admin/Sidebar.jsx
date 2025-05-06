@@ -13,7 +13,8 @@ function Sidebar({ isOpen, sideLinks }) {
 
     // Divido el arreglo de objetos que pase para mapearlo en su respectivo div
     const mainContent = sideLinks.slice(0, 3);
-    const options = sideLinks.slice(3, 5);
+    const settingsLink = sideLinks[3]; // configuracion
+    const logoutLink = sideLinks[4]; //
 
     return (
 
@@ -30,14 +31,27 @@ function Sidebar({ isOpen, sideLinks }) {
                         ))}
                 </div>
                 <div className='bg-white rounded-xl shadow-lg border border-gray-400/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
-                    {
-                        options.map((link, index) => (
-                            <Link key={index} to={link.href} className={`flex items-center text-gray-600 ${activeLink === link.href ? "text-yellow-400 py-4 translate-x-1" : "hover:text-yellow-800 py-4 transition-all duration-300 hover:translate-x-1"}`}>
-                                <span className="material-icons-outlined mr-2">{link.icon}</span>
-                                {link.label}
-                                <span className="material-icons-outlined ml-auto"><MdOutlineArrowForwardIos /></span>
-                            </Link>
-                        ))}
+                     {/* Link normal para Configuración */}
+                    <Link 
+                        to={settingsLink.href} 
+                        className={`flex items-center ${activeLink === settingsLink.href ? "text-yellow-400 py-4 translate-x-1" : "text-gray-600 hover:text-yellow-800 py-4 transition-all duration-300 hover:translate-x-1"}`}
+                    >
+                        <span className="material-icons-outlined mr-2">{settingsLink.icon}</span>
+                        {settingsLink.label}
+                        <span className="material-icons-outlined ml-auto"><MdOutlineArrowForwardIos /></span>
+                    </Link>
+                        {/* Botón para Logout */}
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            logoutLink.onClick();
+                        }}
+                        className="flex items-center w-full text-gray-600 hover:text-yellow-800 py-4 transition-all duration-300 hover:translate-x-1"
+                    >
+                        <span className="material-icons-outlined mr-2">{logoutLink.icon}</span>
+                        {logoutLink.label}
+                        <span className="material-icons-outlined ml-auto"><MdOutlineArrowForwardIos /></span>
+                    </button>
                 </div>
             </aside>
         </>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Outlet } from 'react-router'
+import { useAuth } from '../context/AuthContext';
+import { Navigate, Outlet, useNavigate } from 'react-router'
 import Navbar from '../components/admin/navbar'
 import Sidebar from '../components/admin/Sidebar'
 import { FaHome } from "react-icons/fa";
@@ -11,15 +12,27 @@ import { FaGear } from "react-icons/fa6";
 function AdminLayout() {
 
     // Uso del hook useState para desplegar el sidebar en el layout que comparte estos dos componentes
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
-
+    const [isSidebarOpen, setSidebarOpen] = useState(false);   
+    const navigate = useNavigate();
+    
+    // auth
+    const {loading, isAuthenticated, logout} = useAuth();
+    console.log(loading, isAuthenticated);
+    if(loading) return <h1>Loading...</h1>;
+    if(!loading && !isAuthenticated) return <Navigate to='/admin/login' replace />
+    
+    const handleLogout = async () => {
+        await logout();
+        navigate('/admin/login');
+    };
+    
     // Rutas de mi sidebar con react router
     const sideLinks = [
         { href: "/admin", label: "Inicio", icon: <FaHome /> },
         { href: "/admin/categorias", label: "Categorías", icon: <BiSolidCategory /> },
         { href: "/admin/productos", label: "Productos", icon: <FaCartPlus /> },
         { href: "/admin/configuracion", label: "Configuración", icon: <FaGear /> },
-        { href: "/admin/login", label: "Cerrar Sesión", icon: <IoLogOut /> },
+        { label: "Cerrar Sesión", icon: <IoLogOut />, onClick: handleLogout },
     ];
 
     const cambiarSidebar = () => {
