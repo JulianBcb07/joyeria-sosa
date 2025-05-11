@@ -9,12 +9,102 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export const getProductsByCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const offset = (page - 1) * limit;
+    const sort = req.query.sort; // 'price-asc' o 'price-desc'
+
+    // Validación básica del ID
+    if (isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "El ID de categoría debe ser un número",
+      });
+    }
+
+    // Base de la consulta SQL
+    let query = `SELECT * FROM products WHERE id_category = ?`;
+    let countQuery = `SELECT COUNT(*) as total FROM products WHERE id_category = ?`;
+
+    // Añadir ordenamiento según el parámetro sort
+    let orderBy = "";
+    if (sort === "price-asc") {
+      orderBy = " ORDER BY price ASC";
+    } else if (sort === "price-desc") {
+      orderBy = " ORDER BY price DESC";
+    }
+
+    // 1. Consulta para productos paginados
+    const [products] = await pool.query(query + orderBy + ` LIMIT ? OFFSET ?`, [
+      id,
+      limit,
+      offset,
+    ]);
+
+    // 2. Consulta para el total de productos
+    const [[total]] = await pool.query(countQuery, [id]);
+
+    // 3. Calcular paginación
+    const totalPages = Math.ceil(total.total / limit);
+
+    res.json({
+      success: true,
+      data: products,
+      pagination: {
+        currentPage: page,
+        itemsPerPage: limit,
+        totalItems: total.total,
+        totalPages: totalPages,
+        nextPage: page < totalPages ? page + 1 : null,
+        prevPage: page > 1 ? page - 1 : null,
+      },
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al obtener productos",
+      error: error.message,
+    });
+  }
+};
+
 export const getProducts = async (req, res) => {
   try {
+    // obtener parametros de paginacion con valores por defecto
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 3;
+    const offset = (page - 1) * limit;
+
+    // consulta para obtener los datos paginados
     const [result] = await pool.query(
-      "SELECT * FROM products ORDER by create_at ASC"
+      "SELECT * FROM products ORDER BY create_at ASC LIMIT ? OFFSET ?",
+      [limit, offset]
     );
-    res.json(result);
+
+    // consulta para obtener el total de registros (y para calcular el total de paginas)
+    const [totalResult] = await pool.query(
+      "SELECT COUNT(*) as total FROM products"
+    );
+
+    const total = totalResult[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    // Enviar respuesta con datos y metadatos de paginacion
+    res.json({
+      data: result,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviusPage: page > 1,
+      },
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

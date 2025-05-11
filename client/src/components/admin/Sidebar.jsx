@@ -13,7 +13,7 @@ function Sidebar({ isOpen, sideLinks }) {
 
     // Divido el arreglo de objetos que pase para mapearlo en su respectivo div
     const mainContent = sideLinks.slice(0, 3);
-    const settingsLink = sideLinks[3]; // configuracion
+    // const settingsLink = sideLinks[3]; 
     const logoutLink = sideLinks[4]; //
 
     return (
@@ -32,14 +32,14 @@ function Sidebar({ isOpen, sideLinks }) {
                 </div>
                 <div className='bg-white rounded-xl shadow-lg border border-gray-400/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
                      {/* Link normal para Configuración */}
-                    <Link 
+                    {/* <Link 
                         to={settingsLink.href} 
                         className={`flex items-center ${activeLink === settingsLink.href ? "text-yellow-400 py-4 translate-x-1" : "text-gray-600 hover:text-yellow-800 py-4 transition-all duration-300 hover:translate-x-1"}`}
                     >
                         <span className="material-icons-outlined mr-2">{settingsLink.icon}</span>
                         {settingsLink.label}
                         <span className="material-icons-outlined ml-auto"><MdOutlineArrowForwardIos /></span>
-                    </Link>
+                    </Link> */}
                         {/* Botón para Logout */}
                     <button
                         onClick={(e) => {

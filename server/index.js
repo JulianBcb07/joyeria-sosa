@@ -20,7 +20,7 @@ const app = express();
 app.use(
   cors({
     // importante siempre especificar la conexion del front por buenas practicar y mas especificidad
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173"],
     credentials: true,
   })
 );
@@ -28,7 +28,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Servir archivos estáticos desde la carpeta uploads
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"), {
+    maxAge: "30d",
+    etag: true,
+  })
+);
 
 // sirve para obtener todas las rutas de mis endpoints
 app.use(indexRoutes);

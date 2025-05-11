@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Logo from "../../components/Logo";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 // import { loginRequest } from "../../api/auth";
-import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router";
+import { useAuth } from "../../context/AuthContext";;
 
 function Login() {
     const {register, handleSubmit, formState: { errors } } = useForm();
@@ -13,7 +12,7 @@ function Login() {
 
     useEffect(() => {
         if(isAuthenticated) navigate("/admin");
-    }, [isAuthenticated]);
+    }, [isAuthenticated, navigate]);
 
     // para mandar la respuesta e iniciar sesion
     const onSubmit = handleSubmit(async (values) => {

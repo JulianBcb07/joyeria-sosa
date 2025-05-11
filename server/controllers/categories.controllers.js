@@ -6,16 +6,53 @@ import { pool } from "../db.js";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { json } from "stream/consumers";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export const getAllCategories = async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM category_products");
+    res.json(result[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export const getCategories = async (req, res) => {
   try {
+    // obtener parametros de paginacion con valores por defecto
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 3;
+    const offset = (page - 1) * limit;
+
+    // consulta para obtener los datos paginados
     const [result] = await pool.query(
-      "SELECT * FROM category_products ORDER BY create_at ASC"
+      "SELECT * FROM category_products ORDER BY create_at ASC LIMIT ? OFFSET ?",
+      [limit, offset]
     );
-    res.json(result);
+
+    // consulta para obtener el total de registros (para calcular el total de paginas)
+    const [totalResult] = await pool.query(
+      "SELECT COUNT(*) as total FROM category_products"
+    );
+
+    const total = totalResult[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    // Enviar respuesta con datos y metadatos de paginacion
+    res.json({
+      data: result,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviusPage: page > 1,
+      },
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -122,14 +159,28 @@ export const updateCategory = async (req, res) => {
 
 export const deleteCategory = async (req, res) => {
   try {
-    //  obtener la imagen de categoría actual de la base de datos
+    // 1. Verificar si hay productos asociados primero
+    const [products] = await pool.query(
+      "SELECT COUNT(*) as productCount FROM products WHERE id_category = ?",
+      [req.params.id]
+    );
+
+    if (products[0].productCount > 0) {
+      return res.status(400).json({
+        message:
+          "No se puede eliminar la categoría porque tiene productos asociados",
+        hasProducts: true,
+      });
+    }
+
+    // 2. Obtener información de la categoría para eliminar la imagen
     const [category] = await pool.query(
       "SELECT img_category FROM category_products WHERE id_category = ?",
       [req.params.id]
     );
 
-    // eliminar la imagen anterior de la carpeta junto a la consulta
-    if (category[0].img_category) {
+    // 3. Eliminar la imagen si existe
+    if (category[0]?.img_category) {
       const oldImageName = category[0].img_category.split("/").pop();
       const oldImagePath = path.join(
         __dirname,
@@ -140,23 +191,37 @@ export const deleteCategory = async (req, res) => {
       try {
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
-          console.log(`Imagen anterior eliminada: ${oldImagePath}`);
+          console.log(`Imagen eliminada: ${oldImagePath}`);
         }
       } catch (error) {
-        console.error("Error eliminando imagen anterior:", error);
+        console.error("Error eliminando imagen:", error);
+        // No detenemos el proceso si falla eliminar la imagen
       }
     }
 
-    // ahora elimino los datos de la bd con la consulta SQL delete
+    // 4. Eliminar la categoría
     const [result] = await pool.query(
       "DELETE FROM category_products WHERE id_category = ?",
       [req.params.id]
     );
 
-    if (result.affectedRows === 0)
+    if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Categoría no encontrada" });
-    return res.sendStatus(204);
+    }
+
+    return res.json({
+      success: true,
+      message: "Categoría eliminada correctamente",
+    });
   } catch (error) {
+    // Manejar específicamente el error de FK
+    if (error.code === "ER_ROW_IS_REFERENCED_2" || error.errno === 1451) {
+      return res.status(400).json({
+        message:
+          "No se puede eliminar la categoría porque tiene productos asociados",
+        hasProducts: true,
+      });
+    }
     return res.status(500).json({ message: error.message });
   }
 };

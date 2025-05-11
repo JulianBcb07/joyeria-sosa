@@ -1,7 +1,6 @@
 import React from 'react'
-
 import inicioImage from '../../assets/inicio-joyeria.png';
-import { FaWhatsapp } from 'react-icons/fa'
+import WhatsAppContacto from './WhatsAppContacto';
 
 const Inicio = () => {
     return (
@@ -17,9 +16,7 @@ const Inicio = () => {
                 </h1>
 
                 <p className='text-gray-600 text-lg md:text-xl max-w-xl'>Si te interesa algún producto, no dudes en contactarme para más informacion a mi WhatsApp</p>
-                <a className='bg-green-500 rounded-2xl shadow-lg flex items-center gap-4 justify-center text-white font-medium text-md w-60 py-3  text-center transition-transform hover:scale-105' href="">
-                    <FaWhatsapp className='size-6' /> Contactame
-                </a>
+                <WhatsAppContacto/>
 
                 <div className='flex gap-3 max-w-md'>
                     {/* <input className='flex-1 px-6 py-4 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all' type="email" placeholder='Correo electronico' name="" id="" />

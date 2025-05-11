@@ -3,12 +3,11 @@ import { useForm } from "react-hook-form";
 import { useCategory } from "../../../context/CategoryContext";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate, useParams } from "react-router";
-
-// import Sidebar from '../../components/admin/Sidebar';
+import Swal from "sweetalert2";
 
 function NuevaCategoria() {
-    const { register, handleSubmit, reset } = useForm();
-    const { createCategory, getCategory, updateCategory } = useCategory();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { createCategory, getCategory, updateCategory, errors: categoryErrors } = useCategory();
     const navigate = useNavigate();
     const params = useParams();
     const { user } = useAuth();
@@ -47,29 +46,31 @@ function NuevaCategoria() {
     };
 
     const onSubmit = handleSubmit(async (data) => {
-        const formData = new FormData();
-        formData.append("name", data.name);
-        formData.append("description", data.description);
-        formData.append("id_user", user.id);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("id_user", user.id);
 
-        // Solo adjuntar la imagen si se seleccionó una nueva
-        if (data.img_category && data.img_category[0]) {
-            formData.append("img_category", data.img_category[0]);
-        }
+    if (data.img_category && data.img_category[0]) {
+        formData.append("img_category", data.img_category[0]);
+    }
 
-        try {
-            if (isEditing) {
-                await updateCategory(params.id, formData);
-                console.log("Categoría actualizada con éxito");
-            } else {
-                await createCategory(formData);
-                console.log("Categoría creada con éxito");
-            }
-            navigate("/admin/categorias");
-        } catch (error) {
-            console.error("Error al guardar categoría:", error);
-        }
-    });
+    // Elimina el try-catch, ya que los errores se manejan en el contexto
+    const { success } = isEditing 
+        ? await updateCategory(params.id, formData)
+        : await createCategory(formData);
+
+    if (success) {
+        await Swal.fire({
+            title: "Hecho!",
+            text: `Categoría ${isEditing ? "actualizada" : "creada"} con éxito!`,
+            icon: "success",
+            draggable: true
+        });
+        navigate("/admin/categorias");
+    }
+    // Los errores ya se muestran automáticamente a través de categoryErrors
+});
 
     return (
         <>
@@ -78,15 +79,32 @@ function NuevaCategoria() {
                     {isEditing ? "Editar categoría" : "Nueva categoría"}
                 </h1>
                 <div className="bg-white py-10 px-6 max-w-4xl mx-auto shadow-lg rounded-lg">
-                    <form action="" onSubmit={onSubmit} encType="multipart/form-data">
+                    
+                {/* Mostrar errores del backend */}
+                    {categoryErrors.length > 0 && (
+                        <div className="mb-4">
+                            {categoryErrors.map((error, i) => (
+                                <div key={i} className="bg-red-500 p-2 my-2 rounded-lg text-white">
+                                    {error}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    
+                    <form onSubmit={onSubmit} encType="multipart/form-data">
                         <input type="text" hidden {...register("id_user")} />
                         <label htmlFor="" className="font-medium">
                             Titulo
                         </label>
+                        {errors.name && (
+                            <p className="text-red-500 text-xs font-medium mt-1">
+                                {errors.name.message}
+                            </p>
+                        )}
                         <input
                             type="text"
                             placeholder="nombre"
-                            {...register("name")}
+                            {...register("name", { required: "El titulo es requerido" })}
                             autoFocus
                             className="w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
@@ -94,10 +112,15 @@ function NuevaCategoria() {
                         <label htmlFor="" className="font-medium">
                             Descripción
                         </label>
+                        {errors.description && (
+                            <p className="text-red-500 text-xs font-medium mt-1">
+                                {errors.description.message}
+                            </p>
+                        )}
                         <textarea
                             type="text"
                             placeholder="Descripcion..."
-                            {...register("description")}
+                            {...register("description", { required: "La descripción es requerida" })}
                             className="w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
                         <label htmlFor="" className="font-medium">
@@ -105,6 +128,12 @@ function NuevaCategoria() {
                                 ? "Cambiar imagen de categoría"
                                 : "Cargar imagen de categoría"}
                         </label>
+
+                        {!currentImage && errors.img_category && (
+                            <p className="text-red-500 text-xs font-medium mt-1">
+                                {errors.img_category.message}
+                            </p>
+                        )}
 
                         {currentImage && (
                             <div className="mb-4">
@@ -120,7 +149,9 @@ function NuevaCategoria() {
                         <input
                             type="file"
                             name="img_category"
-                            {...register("img_category")}
+                            {...register("img_category", {
+                                required: !currentImage ? "La imagen es requerida" : false
+                            })}
                             onChange={handleImageChange}
                             className="w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />

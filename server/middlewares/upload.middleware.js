@@ -2,6 +2,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import sharp from "sharp";
 
 // variables
 // CURRENT_DIR obtiene el directorio actual usando dirname y fileURLToPAth
@@ -51,9 +52,43 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 10000000, // limita un maximo de 10MB a las imagenes
+    fileSize: 5 * 1024 * 1024, // limita un maximo de 10MB a las imagenes
   },
 });
+
+// Middleware para procesar imágenes con Sharp
+export const optimizeImage = async (req, res, next) => {
+  if (!req.file) return next();
+
+  try {
+    const originalPath = req.file.path;
+    const optimizedFilename = `optimized-${req.file.filename}`;
+    const optimizedPath = path.join(
+      path.dirname(originalPath),
+      optimizedFilename
+    );
+
+    await sharp(originalPath)
+      .resize({
+        width: 800,
+        height: 800,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .toFormat("jpeg", { quality: 80 })
+      .toFile(optimizedPath);
+
+    // Eliminar el original y actualizar req.file
+    fs.unlinkSync(originalPath);
+    req.file.path = optimizedPath;
+    req.file.filename = optimizedFilename;
+
+    next();
+  } catch (error) {
+    console.error("Error optimizando imagen:", error);
+    next(error);
+  }
+};
 
 // Middlewares específicos
 // para subir la imagen de categorias el formulario tiene que tener el name="img_category"
