@@ -1,7 +1,7 @@
 import { FaWhatsapp } from 'react-icons/fa';
 
 const WhatsAppContacto = () => {
-    const whatsappNumber = ""; // Recomiendo usar variables de entorno
+    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || ""; 
     
     // const message = `Hola, me interesa este producto: \n*${product.name}*\n*Precio: $${product.price}*\n¿Me podría dar más información?`;
 
