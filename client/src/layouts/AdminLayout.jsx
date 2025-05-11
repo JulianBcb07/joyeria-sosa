@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext';
 import { Navigate, Outlet, useNavigate } from 'react-router'
-import Navbar from '../components/admin/navbar'
+import Navbar from '../components/admin/Navbar'
 import Sidebar from '../components/admin/Sidebar'
 import { FaHome } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
