@@ -7,7 +7,7 @@ import Logo from '../Logo'
 
 const Footer = () => {
     return (
-        <footer className='bg-gray-100'>
+        <footer id='footer' className='bg-gray-100'>
             <div className='container mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8'>
                 <div className='flex flex-col md:flex-row justify-between gap-8 md:gap-12'>
                     {/* brand column */}

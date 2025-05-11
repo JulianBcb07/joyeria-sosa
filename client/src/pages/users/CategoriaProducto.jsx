@@ -63,10 +63,6 @@ const CategoriaProducto = () => {
                     </div>
                 )}
 
-
-
-
-
                 {/* Resto del contenido (filtros y productos) solo si hay datos */}
                 {products.data?.length > 0 && (
                     <>
