@@ -131,6 +131,9 @@ export const createProduct = async (req, res) => {
     const { name, recomendation, price, description, id_category, id_user } =
       req.body;
 
+    // Convertir id_category vacío a NULL
+    const categoryId = id_category === "" ? null : id_category;
+
     // obtener la URL de la imagen que se ha subido
     const img_product = req.file
       ? `${req.protocol}://${req.get("host")}/uploads/productos/${
@@ -146,7 +149,7 @@ export const createProduct = async (req, res) => {
         price,
         description,
         img_product,
-        id_category,
+        categoryId,
         id_user,
       ]
     );
@@ -166,6 +169,12 @@ export const updateProduct = async (req, res) => {
   try {
     const { name, recomendation, price, description, id_category, id_user } =
       req.body;
+
+    // Conversión explícita a NULL si viene vacío
+    const categoryId =
+      !id_category || id_category === "null" || id_category === ""
+        ? null
+        : parseInt(id_category);
 
     // obtengo la imagen del producto actual de la base de datos
     const [product] = await pool.query(
@@ -217,7 +226,7 @@ export const updateProduct = async (req, res) => {
         price,
         description,
         img_product,
-        id_category,
+        categoryId,
         id_user,
         req.params.id,
       ]

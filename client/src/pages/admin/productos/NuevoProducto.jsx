@@ -146,7 +146,7 @@ function NuevoProducto() {
                             {...register("id_category")}
                             className='w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600'
                         >
-                            <option value="" disabled>-- seleccionar categoría --</option>
+                            <option value="">-- seleccionar categoría --</option>
                             {categories.data && categories.data.map(category => (
                                 <option key={category.id_category} value={category.id_category}>
                                     {category.name}
