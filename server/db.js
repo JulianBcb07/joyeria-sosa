@@ -12,6 +12,4 @@ export const pool = createPool({
   password: process.env.DB_PASSWORD || process.env.DATABASE_PASSWORD,
   database: process.env.DB_NAME || process.env.DATABASE,
   port: process.env.DB_PORT || process.env.DATABASE_PORT,
-  ssl: process.env.DB_SSL ? JSON.parse(process.env.DB_SSL) : null, // SSL solo en producción
-  waitForConnections: true,
 });
