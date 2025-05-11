@@ -20,7 +20,7 @@ const app = express();
 app.use(
   cors({
     // importante siempre especificar la conexion del front por buenas practicar y mas especificidad
-    origin: ["http://localhost:5173"],
+    origin: [process.env.FRONTEND_URL],
     credentials: true,
   })
 );
