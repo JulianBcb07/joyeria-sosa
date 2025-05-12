@@ -41,11 +41,6 @@ app.use(indexRoutes);
 app.use(routerLogin);
 app.use(categoryRoutes);
 app.use(productRoutes);
-
-// 3. Finalmente, maneja todas las demás rutas con el frontend
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
-});
-
 app.listen(PORT);
+
 console.log(`server en el puerto ${PORT}`);
