@@ -36,11 +36,23 @@ app.use(
   })
 );
 
+// Servir archivos estáticos desde client/dist
+if (process.env.NODE_ENV === "production") {
+  // Cambiar la ruta para que apunte a client/dist
+  app.use(express.static(path.join(__dirname, "client", "dist")));
+
+  // Redirigir todas las rutas no API a 'index.html' del frontend
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  });
+}
+
 // sirve para obtener todas las rutas de mis endpoints
-app.use(indexRoutes);
-app.use(routerLogin);
-app.use(categoryRoutes);
-app.use(productRoutes);
+app.use("/api", indexRoutes);
+app.use("/api", routerLogin);
+app.use("/api", categoryRoutes);
+app.use("/api", productRoutes);
+
 app.listen(PORT);
 
 console.log(`server en el puerto ${PORT}`);

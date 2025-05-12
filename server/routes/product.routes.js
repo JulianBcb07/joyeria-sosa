@@ -22,7 +22,7 @@ const handleUploadErrors = (error, req, res, next) => {
         .status(400)
         .json({ error: "El archivo no puede superar los 5MB" });
     }
-    if (err.message === "Solo se permiten imágenes (JPEG y PNG)") {
+    if (error.message === "Solo se permiten imágenes (JPEG y PNG)") {
       return res.status(400).json({ error: error.message });
     }
     return res.status(500).json({ error: "Error al subir la imagen" });
