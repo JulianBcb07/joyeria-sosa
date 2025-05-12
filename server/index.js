@@ -36,6 +36,12 @@ app.use(
   })
 );
 
+// sirve para obtener todas las rutas de mis endpoints
+app.use("/api", indexRoutes);
+app.use("/api", routerLogin);
+app.use("/api", categoryRoutes);
+app.use("/api", productRoutes);
+
 // Servir archivos estáticos desde client/dist
 if (process.env.NODE_ENV === "production") {
   // Cambiar la ruta para que apunte a client/dist
@@ -46,12 +52,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
   });
 }
-
-// sirve para obtener todas las rutas de mis endpoints
-app.use("/api", indexRoutes);
-app.use("/api", routerLogin);
-app.use("/api", categoryRoutes);
-app.use("/api", productRoutes);
 
 app.listen(PORT);
 
