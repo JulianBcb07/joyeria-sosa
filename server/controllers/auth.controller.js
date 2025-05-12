@@ -117,12 +117,12 @@ export const login = async (req, res) => {
 
 // cerrar la sesion y cerrar el token
 export const logout = async (req, res) => {
-  // el valor del token se deja vacio
   res.cookie("token", "", {
-    httpOnly: false,
-    expires: new Date(0),
+    httpOnly: true, // igual que al setear
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/", // MUY IMPORTANTE
+    expires: new Date(0), // Expira inmediatamente
   });
   return res.status(200).json({ message: "Sesion cerrada de forma exitosa" });
 };
