@@ -71,7 +71,14 @@ function CategoryTable() {
         }
     }, [deleteCategory, memoizedCategories.length, currentPage, getCategories, itemsPerPage]);
 
-    if (memoizedCategories.length === 0) return (<h1>No hay categorias</h1>);
+    if (memoizedCategories.length === 0) return (<div className='flex justify-center items-center bg-blue-200 mx-auto max-w-lg rounded-lg px-6 py-4 my-4'>
+        <svg viewBox="0 0 24 24" className="text-blue-600 w-5 h-5 sm:w-5 sm:h-5 mr-3">
+            <path fill="currentColor"
+                d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm.25,5a1.5,1.5,0,1,1-1.5,1.5A1.5,1.5,0,0,1,12.25,5ZM14.5,18.5h-4a1,1,0,0,1,0-2h.75a.25.25,0,0,0,.25-.25v-4.5a.25.25,0,0,0-.25-.25H10.5a1,1,0,0,1,0-2h1a2,2,0,0,1,2,2v4.75a.25.25,0,0,0,.25.25h.75a1,1,0,1,1,0,2Z">
+            </path>
+        </svg>
+        <span className='text-blue-800'>Aún no hay categorías creadas</span>
+    </div>);
 
     return (
         <div className="overflow-x-auto hadow max-w-[calc(100vw-32px)] rounded-lg shadow mb-10">

@@ -24,6 +24,8 @@ export const authRequired = async (req, res, next) => {
 
     req.user = {
       id: decoded.id,
+      name: decoded.name,
+      last_name: decoded.last_name,
       username: decoded.username,
     };
 

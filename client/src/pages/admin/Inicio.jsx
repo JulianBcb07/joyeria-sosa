@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
+import { useAuth } from '../../context/AuthContext';
 import { useCategory } from '../../context/CategoryContext'
 import { useProduct } from '../../context/ProductContext';
 
 function Inicio() {
 
+    const {user} = useAuth();
     const { getProducts, products } = useProduct();
     const { getAllCategories, categories } = useCategory();
     const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ function Inicio() {
         <>
             <div className='bg-white border border-gray-400/40 rounded-xl p-6 mb-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'>
                 <h2 className='text-3xl md:text-4xl'>
-                    Bienvenido <span className='font-bold'>Julian Daniel</span>
+                    Bienvenido <span className='font-bold'>{`${user?.name} ${user?.last_name}`}</span>
                 </h2>
             </div>
 

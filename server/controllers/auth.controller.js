@@ -89,6 +89,8 @@ export const login = async (req, res) => {
     // generar el token JWT
     const token = await createAccessToken({
       id: user.id,
+      name: user.name,
+      last_name: user.last_name,
       username: user.username,
     });
 
@@ -103,6 +105,7 @@ export const login = async (req, res) => {
     res.json({
       id: user.id,
       name: user.name,
+      last_name: user.last_name,
       username: user.username,
       message: "Inicio de sesion existoso",
     });
@@ -140,6 +143,7 @@ export const verifyToken = async (req, res) => {
     return res.json({
       id: user.id,
       name: user.name,
+      last_name: user.last_name,
       username: user.username,
     });
   });
