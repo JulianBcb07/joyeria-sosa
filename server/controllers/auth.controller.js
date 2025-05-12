@@ -36,12 +36,15 @@ export const register = async (req, res) => {
     });
     console.log(result);
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
-      httpOnly: false, // Siempre activo por seguridad
-      secure: process.env.NODE_ENV === "production", // HTTPS solo en producción
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      // En producción: máxima seguridad
-      // En desarrollo: más flexible para testing
+      httpOnly: true,
+      secure: isProduction, // true en producción, false en desarrollo
+      sameSite: isProduction ? "none" : "lax",
+      ...(isProduction && { domain: ".onrender.com" }), // Solo en producción
+      maxAge: 24 * 60 * 60 * 1000, // 1 día
+      path: "/",
     });
 
     res.status(201).json({
@@ -94,12 +97,15 @@ export const login = async (req, res) => {
       username: user.username,
     });
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
-      httpOnly: false, // Siempre activo por seguridad
-      secure: process.env.NODE_ENV === "production", // HTTPS solo en producción
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      // En producción: máxima seguridad
-      // En desarrollo: más flexible para testing
+      httpOnly: true,
+      secure: isProduction, // true en producción, false en desarrollo
+      sameSite: isProduction ? "none" : "lax",
+      ...(isProduction && { domain: ".onrender.com" }), // Solo en producción
+      maxAge: 24 * 60 * 60 * 1000, // 1 día
+      path: "/",
     });
 
     res.json({
@@ -118,13 +124,18 @@ export const login = async (req, res) => {
 // cerrar la sesion y cerrar el token
 export const logout = async (req, res) => {
   // el valor del token se deja vacio
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("token", "", {
-    httpOnly: false,
-    expires: new Date(0),
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    httpOnly: true, // Debe coincidir con la configuración de login (true)
+    expires: new Date(0), // Fecha en el pasado para borrar la cookie
+    secure: isProduction, // Misma configuración que en login
+    sameSite: isProduction ? "none" : "lax", // Coherente con login
+    ...(isProduction && { domain: ".onrender.com" }), // Mismo dominio que en login
+    path: "/", // Mismo path que en login
   });
-  return res.status(200).json({ message: "Sesion cerrada de forma exitosa" });
+
+  return res.status(200).json({ message: "Sesión cerrada de forma exitosa" });
 };
 
 export const verifyToken = async (req, res) => {
