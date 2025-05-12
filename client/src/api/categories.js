@@ -16,17 +16,18 @@ const handleRequest = async (request) => {
   }
 };
 
-export const getAllCategoriesRequest = () => axios.get(`/allCategorias`);
+export const getAllCategoriesRequest = () => axios.get(`/api/allCategorias`);
 
 export const getCategoriesRequest = (page, limit) =>
-  axios.get(`/categorias?page=${page}&limit=${limit}`);
+  axios.get(`/api/categorias?page=${page}&limit=${limit}`);
 
-export const getCategoryRequest = (id) => axios.get(`/categoria/${id}`);
+export const getCategoryRequest = (id) => axios.get(`/api/categoria/${id}`);
 
 export const createCategoryRequest = (categoria) =>
-  handleRequest(axios.post("/categoria", categoria));
+  handleRequest(axios.post("/api/categoria", categoria));
 
 export const updateCategoryRequest = (id, categoria) =>
-  axios.put(`/categoria/${id}`, categoria);
+  axios.put(`/api/categoria/${id}`, categoria);
 
-export const deleteCategoryRequest = (id) => axios.delete(`/categoria/${id}`);
+export const deleteCategoryRequest = (id) =>
+  axios.delete(`/api/categoria/${id}`);

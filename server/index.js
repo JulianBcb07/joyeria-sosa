@@ -43,15 +43,15 @@ app.use("/api", categoryRoutes);
 app.use("/api", productRoutes);
 
 // Servir archivos estáticos desde client/dist
-if (process.env.NODE_ENV === "production") {
-  // Cambiar la ruta para que apunte a client/dist
-  app.use(express.static(path.join(__dirname, "client", "dist")));
+// if (process.env.NODE_ENV === "production") {
+//   // Cambiar la ruta para que apunte a client/dist
+//   // app.use(express.static(path.join(__dirname, "client", "dist")));
 
-  // Redirigir todas las rutas no API a 'index.html' del frontend
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-  });
-}
+//   // Redirigir todas las rutas no API a 'index.html' del frontend
+//   // app.get("*", (req, res) => {
+//   //   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+//   // });
+// }
 
 app.listen(PORT);
 

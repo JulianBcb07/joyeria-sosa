@@ -22,18 +22,18 @@ export const getProductsByCategoryRequest = (id, page, limit, sort = null) => {
   params.append("limit", limit);
   if (sort) params.append("sort", sort);
 
-  return axios.get(`/productos/categoria/${id}?${params.toString()}`);
+  return axios.get(`/api/productos/categoria/${id}?${params.toString()}`);
 };
 
 export const getProductsRequest = (page, limit) =>
-  axios.get(`/productos?page=${page}&limit=${limit}`);
+  axios.get(`/api/productos?page=${page}&limit=${limit}`);
 
-export const getProductRequest = (id) => axios.get(`/producto/${id}`);
+export const getProductRequest = (id) => axios.get(`/api/producto/${id}`);
 
 export const createProductRequest = (producto) =>
-  handleRequest(axios.post("/producto", producto));
+  handleRequest(axios.post("/api/producto", producto));
 
 export const updateProductRequest = (id, producto) =>
-  axios.put(`/producto/${id}`, producto);
+  axios.put(`/api/producto/${id}`, producto);
 
-export const deleteProductRequest = (id) => axios.delete(`/producto/${id}`);
+export const deleteProductRequest = (id) => axios.delete(`/api/producto/${id}`);
