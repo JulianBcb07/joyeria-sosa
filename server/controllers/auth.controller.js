@@ -37,11 +37,11 @@ export const register = async (req, res) => {
     console.log(result);
 
     res.cookie("token", token, {
-      httpOnly: true, // debe ser true por seguridad
-      secure: true, // obligatorio en producción
-      sameSite: "none", // necesario para cookies cross-site en HTTPS
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // ✅ solo en prod
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // ✅ flexible en dev
       path: "/",
-      maxAge: 24 * 60 * 60 * 1000, // 1 día
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.status(201).json({
@@ -95,11 +95,11 @@ export const login = async (req, res) => {
     });
 
     res.cookie("token", token, {
-      httpOnly: true, // debe ser true por seguridad
-      secure: true, // obligatorio en producción
-      sameSite: "none", // necesario para cookies cross-site en HTTPS
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // ✅ solo en prod
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // ✅ flexible en dev
       path: "/",
-      maxAge: 24 * 60 * 60 * 1000, // 1 día
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.json({

@@ -60,34 +60,54 @@ const logout = async () => {
   }
 };
 
+// desarrollo
+  // useEffect(() => {
+  //   async function checkLogin() {
+  //     const cookies = Cookies.get();
+  //     if (!cookies.token) {
+  //       setIsAuthenticated(false);
+  //       setLoading(false);
+  //       return setUser(null);
+  //     }
+  //       try {
+  //         const res = await verifyTokenRequest(cookies.token);
+  //         if (!res.data) {
+  //           setIsAuthenticated(false);
+  //           setLoading(false);
+  //           return;
+  //         } 
+
+  //         setIsAuthenticated(true);
+  //         setUser(res.data);
+  //         setLoading(false);
+  //       } catch (error) {
+  //         // console.log(error);
+  //         setIsAuthenticated(false);
+  //         setUser(null);
+  //         setLoading(false);
+  //       }
+  //     }
+  //   checkLogin();
+  // }, []);
+
+  // produccion:
   useEffect(() => {
     async function checkLogin() {
-      const cookies = Cookies.get();
-      if (!cookies.token) {
+      try {
+        const res = await verifyTokenRequest(); // axios ya tiene withCredentials: true
+        setIsAuthenticated(true);
+        setUser(res.data);
+      } catch (error) {
         setIsAuthenticated(false);
+        setUser(null);
+      } finally {
         setLoading(false);
-        return setUser(null);
       }
-        try {
-          const res = await verifyTokenRequest(cookies.token);
-          if (!res.data) {
-            setIsAuthenticated(false);
-            setLoading(false);
-            return;
-          } 
-
-          setIsAuthenticated(true);
-          setUser(res.data);
-          setLoading(false);
-        } catch (error) {
-          // console.log(error);
-          setIsAuthenticated(false);
-          setUser(null);
-          setLoading(false);
-        }
-      }
+    }
+  
     checkLogin();
   }, []);
+  
 
   return (
     <AuthContext.Provider
