@@ -30,7 +30,7 @@ app.use(cookieParser());
 // Servir archivos estáticos desde la carpeta uploads
 app.use(
   "/uploads",
-  express.static(path.join(__dirname, "uploads"), {
+  express.static(process.env.UPLOADS_DIR, {
     maxAge: "30d",
     etag: true,
   })

@@ -251,7 +251,7 @@ export const deleteProduct = async (req, res) => {
       const oldImageName = product[0].img_product.split("/").pop();
       const oldImagePath = path.join(
         __dirname,
-        "..uploads/productos",
+        "../uploads/productos",
         oldImageName
       );
 

@@ -3,14 +3,18 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
+import dotenv from "dotenv";
 
 // variables
 // CURRENT_DIR obtiene el directorio actual usando dirname y fileURLToPAth
 // const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const UPDLOADS_DIR = path.join(__dirname, "../uploads");
+dotenv.config({ path: path.resolve(__dirname, ".env") });
+// const UPDLOADS_DIR = path.join(__dirname, "../uploads");
 const MIMETYPES = ["image/jpeg", "image/png"];
+
+export const UPLOADS_DIR = process.env.UPLOADS_DIR;
 
 // configuración de almacenamiento
 const storage = multer.diskStorage({
@@ -19,7 +23,7 @@ const storage = multer.diskStorage({
     const typeFile = req.originalUrl.includes("categoria")
       ? "categorias"
       : "productos";
-    const uploadPath = path.join(UPDLOADS_DIR, typeFile);
+    const uploadPath = path.join(UPLOADS_DIR, typeFile);
     // crear directorio si no existe
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
