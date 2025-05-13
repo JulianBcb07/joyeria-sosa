@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/users/Navbar";
 import Footer from "../../components/users/Footer";
 import { useProduct } from "../../context/ProductContext";
+import { useCategory } from "../../context/CategoryContext"
 import { Link, useParams } from "react-router";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
@@ -10,6 +11,8 @@ const CategoriaProducto = () => {
     const [selectedFilter, setSelectedFilter] = useState(null);
     const { id } = useParams();
     const { products, getProductsByCategory } = useProduct();
+    const {categories, getCategory} = useCategory();
+    const [currentCategory, setCurrentCategory] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
 
@@ -24,8 +27,18 @@ const CategoriaProducto = () => {
                         ? "price-desc"
                         : null;
             getProductsByCategory(id, currentPage, itemsPerPage, sortParam);
+             // Cargar información de la categoría
+             const loadCategory = async () => {
+                try {
+                    const category = await getCategory(id);
+                    setCurrentCategory(category);
+                } catch (error) {
+                    console.error("Error al cargar la categoría:", error);
+                }
+            };
+            loadCategory();
         }
-    }, [id, currentPage, selectedFilter, getProductsByCategory]); // Solo dependencias esenciales
+    }, [id, currentPage, selectedFilter, getProductsByCategory, getCategory]); // Solo dependencias esenciales
 
     // Modifica la función para resetear la página al cambiar filtro
     const handleFilterChange = (filterType) => {
@@ -68,12 +81,10 @@ const CategoriaProducto = () => {
                     <>
                         <section className=" container mx-auto max-w-7xl pt-28 lg:pt-36 pb-16 px-4">
                             <div className="text-center mb-16">
-                                <h2 className="text-3xl font-bold mb-4">Producto seleccionado</h2>
-                                <p className="text-gray-600 text-lg text-justify">
-                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde
-                                    exercitationem, quod corporis molestias temporibus voluptatem,
-                                    itaque tenetur sit voluptatibus praesentium sunt magni, cupiditate
-                                    incidunt et consectetur nesciunt dicta dolore dolorum.
+                                <h2 className="text-3xl font-bold mb-4">{currentCategory?.name || "Cargando categoría..."}</h2>
+                                <p className="text-gray-600 text-lg text-center">
+                                {currentCategory?.description || 
+                                    "Descripción de la categoría no disponible."}
                                 </p>
                             </div>
                             {/* filtro dispositivos chicos */}

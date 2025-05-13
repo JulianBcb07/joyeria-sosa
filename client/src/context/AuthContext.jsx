@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { loginRequest, verifyTokenRequest, logoutRequest } from "../api/auth";
 import Cookies from "js-cookie";
-
+import { useLocation } from "react-router";
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
+
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error("useAuth deberia ser usado dentro de AuthProvider");
@@ -90,24 +91,39 @@ const logout = async () => {
   //   checkLogin();
   // }, []);
 
-  // produccion:
+  const location = useLocation();
+
   useEffect(() => {
+    const publicRoutes = ["/", "/login", "/register"];
+    const isPublicRoute = publicRoutes.includes(location.pathname);
+
+    // Si estoy en una ruta pública, no hace falta verificar el token
+    if (isPublicRoute) {
+      setLoading(false);
+      return;
+    }
+
     async function checkLogin() {
       try {
-        const res = await verifyTokenRequest(); // axios ya tiene withCredentials: true
-        setIsAuthenticated(true);
-        setUser(res.data);
+        const res = await verifyTokenRequest();
+        if (res.status === 200) {
+          setIsAuthenticated(true);
+          setUser(res.data);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
       } catch (error) {
+        // Puedes eliminar este catch si usás validateStatus
         setIsAuthenticated(false);
         setUser(null);
       } finally {
         setLoading(false);
       }
     }
-  
+
     checkLogin();
-  }, []);
-  
+  }, [location.pathname]);
 
   return (
     <AuthContext.Provider

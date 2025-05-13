@@ -12,20 +12,29 @@ import { FaGear } from "react-icons/fa6";
 function AdminLayout() {
 
     // Uso del hook useState para desplegar el sidebar en el layout que comparte estos dos componentes
-    const [isSidebarOpen, setSidebarOpen] = useState(false);   
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
-    
+
     // auth
-    const {loading, isAuthenticated, logout} = useAuth();
+    const { loading, isAuthenticated, logout } = useAuth();
     console.log(loading, isAuthenticated);
-    if(loading) return <h1>Loading...</h1>;
-    if(!loading && !isAuthenticated) return <Navigate to='/admin/login' replace />
-    
+    if (loading) return (
+        <div className="flex items-center justify-center h-screen">
+            <div className="relative">
+                {/* Círculo gris (fondo) */}
+                <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
+                {/* Spinner azul (parte animada) */}
+                <div className="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin"></div>
+            </div>
+        </div>
+    );
+    if (!loading && !isAuthenticated) return <Navigate to='/admin/login' replace />
+
     const handleLogout = async () => {
         await logout();
         navigate('/admin/login');
     };
-    
+
     // Rutas de mi sidebar con react router
     const sideLinks = [
         { href: "/admin", label: "Inicio", icon: <FaHome /> },

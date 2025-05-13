@@ -118,17 +118,16 @@ const Navbar = () => {
                                 ))}
 
                                 {/* btn para contacto */}
-                                <button className="w-full bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium transition-all hover:shadow-lg hover:shadow-blue-100">
-                                    <a
-                                        href="#contactame" onClick={(e) => {
+                                
+                                    <a  className="w-full flex items-center justify-center bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium transition-all hover:shadow-lg hover:shadow-blue-100"
+                                        href="#footer" onClick={(e) => {
                                             if (location.pathname !== '/') {
                                                 e.preventDefault();
-                                                navigate('/#contactame');
+                                                navigate('/#footer');
                                             }
                                         }}
                                     >Contactame
                                     </a>
-                                </button>
                             </div>
                         </div>
                     )

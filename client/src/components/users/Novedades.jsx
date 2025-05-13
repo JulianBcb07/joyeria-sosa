@@ -1,5 +1,5 @@
 import React from 'react'
-import scheduleImage from '../../assets/page.png';
+import scheduleImage from '../../assets/page.webp';
 import { IoIosArrowRoundForward } from 'react-icons/io';
 
 const Novedades = () => {
