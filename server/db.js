@@ -1,7 +1,18 @@
 import { createPool } from "mysql2/promise";
+import path from "path";
+import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, ".env") });
+
+console.log("Se está ejecutando db.js");
 dotenv.config({ path: "./.env" });
+dotenv.config();
+console.log("Leyendo .env...");
+console.log("Usuario DB:", process.env.DATABASE_USER);
 
 // Importante leer la documentacion de express, mysql2 como se utiliza estos segmentos de codigo.
 // establecemos la conexion de la base de datos mysql
