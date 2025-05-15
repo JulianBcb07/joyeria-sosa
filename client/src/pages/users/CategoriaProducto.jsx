@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/users/Navbar";
 import Footer from "../../components/users/Footer";
 import { useProduct } from "../../context/ProductContext";
-import { useCategory } from "../../context/CategoryContext"
+import { useCategory } from "../../context/CategoryContext";
 import { Link, useParams } from "react-router";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
@@ -10,63 +10,80 @@ const CategoriaProducto = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedFilter, setSelectedFilter] = useState(null);
     const { id } = useParams();
-    const { products, getProductsByCategory } = useProduct();
-    const {categories, getCategory} = useCategory();
+    const { products, getProductsByCategory, clearProducts } = useProduct();
+    const { getCategory } = useCategory();
     const [currentCategory, setCurrentCategory] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
     const itemsPerPage = 12;
 
-    // Efecto único para cargar productos
     useEffect(() => {
-        if (id) {
-            // Convierte el filtro seleccionado al formato que espera el backend
-            const sortParam =
-                selectedFilter === "low-price"
-                    ? "price-asc"
-                    : selectedFilter === "high-price"
-                        ? "price-desc"
-                        : null;
-            getProductsByCategory(id, currentPage, itemsPerPage, sortParam);
-             // Cargar información de la categoría
-             const loadCategory = async () => {
+        let isMounted = true;
+        
+        const fetchData = async () => {
+            if (id) {
+                setIsLoading(true);
+                clearProducts();
+                
                 try {
-                    const category = await getCategory(id);
-                    setCurrentCategory(category);
+                    const sortParam = selectedFilter === "low-price" 
+                        ? "price-asc" 
+                        : selectedFilter === "high-price" 
+                            ? "price-desc" 
+                            : null;
+                    
+                    const [categoryData] = await Promise.all([
+                        getCategory(id),
+                        getProductsByCategory(id, currentPage, itemsPerPage, sortParam)
+                    ]);
+                    
+                    if (isMounted) {
+                        setCurrentCategory(categoryData);
+                    }
                 } catch (error) {
-                    console.error("Error al cargar la categoría:", error);
+                    console.error("Error al cargar datos:", error);
+                    if (isMounted) {
+                        setCurrentCategory(null);
+                    }
+                } finally {
+                    if (isMounted) setIsLoading(false);
                 }
-            };
-            loadCategory();
-        }
-    }, [id, currentPage, selectedFilter, getProductsByCategory, getCategory]); // Solo dependencias esenciales
+            }
+        };
+        
+        fetchData();
+        
+        return () => {
+            isMounted = false;
+        };
+    }, [id, currentPage, selectedFilter, getProductsByCategory, getCategory, clearProducts]);
 
-    // Modifica la función para resetear la página al cambiar filtro
     const handleFilterChange = (filterType) => {
         setSelectedFilter(filterType);
-        setCurrentPage(1); // Importante: resetear a página 1 al cambiar filtro
+        setCurrentPage(1);
     };
 
     const handlePageChange = {
-        next: () =>
-            setCurrentPage((prev) =>
-                Math.min(prev + 1, products.pagination?.totalPages || 1)
-            ),
-        prev: () => setCurrentPage((prev) => Math.max(prev - 1, 1)),
+        next: () => setCurrentPage(prev => Math.min(prev + 1, products.pagination?.totalPages || 1)),
+        prev: () => setCurrentPage(prev => Math.max(prev - 1, 1)),
     };
 
     return (
-        // En esta parte se hace un blur en la esquina superior izquiera en el main de la pagina.
         <main className="relative min-h-screen overflow-x-hidden">
             <div className="absolute -top-28 -left-28 w-[500px] h-[500px] bg-gradient-to-tr from-indigo-500/20 to-pink-500/20 rounded-full blur-[80px] -z-10"></div>
-            <div className="overflow-hidden ">
+            <div className="overflow-hidden">
                 <Navbar />
 
-                {products.data?.length === 0 && (
+                {isLoading ? (
+                    <div className="text-center mx-auto container my-80">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                        <h1 className="text-xl font-semibold text-gray-600 mt-4">Cargando productos...</h1>
+                    </div>
+                ) : products.data?.length === 0 ? (
                     <div className="text-center mx-auto container my-80">
                         <h1 className="text-xl font-semibold text-gray-600">
                             No hay productos en esta categoría
                         </h1>
-                        {/* Opcional: puedes añadir un botón para volver */}
                         <Link
                             to="/#productos"
                             className="mt-4 inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -74,20 +91,18 @@ const CategoriaProducto = () => {
                             Ver otras categorías
                         </Link>
                     </div>
-                )}
-
-                {/* Resto del contenido (filtros y productos) solo si hay datos */}
-                {products.data?.length > 0 && (
+                ) : (
                     <>
-                        <section className=" container mx-auto max-w-7xl pt-28 lg:pt-36 pb-16 px-4">
+                        <section className="container mx-auto max-w-7xl pt-28 lg:pt-36 pb-16 px-4">
                             <div className="text-center mb-16">
-                                <h2 className="text-3xl font-bold mb-4">{currentCategory?.name || "Cargando categoría..."}</h2>
+                                <h2 className="text-3xl font-bold mb-4">{currentCategory?.name || "Categoría"}</h2>
                                 <p className="text-gray-600 text-lg text-center">
-                                {currentCategory?.description || 
+                                    {currentCategory?.description || 
                                     "Descripción de la categoría no disponible."}
                                 </p>
                             </div>
-                            {/* filtro dispositivos chicos */}
+                            
+                            {/* Filtros para móviles */}
                             <div className="mt-8 block md:hidden">
                                 <button
                                     onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -110,7 +125,6 @@ const CategoriaProducto = () => {
                                     </svg>
                                 </button>
 
-                                {/* Panel de filtros que aparece al hacer clic */}
                                 {isFilterOpen && (
                                     <div className="mt-4 space-y-2 border rounded-lg border-gray-300 p-4">
                                         <div className="flex justify-between items-center">
@@ -118,13 +132,9 @@ const CategoriaProducto = () => {
                                         </div>
 
                                         <div className="flex flex-col gap-3 mt-3">
-                                            <label
-                                                htmlFor="mobile-high-price"
-                                                className="flex gap-2 items-center cursor-pointer"
-                                            >
+                                            <label className="flex gap-2 items-center cursor-pointer">
                                                 <input
                                                     type="radio"
-                                                    id="mobile-high-price"
                                                     name="mobile-filter"
                                                     checked={selectedFilter === "high-price"}
                                                     onChange={() => handleFilterChange("high-price")}
@@ -134,13 +144,9 @@ const CategoriaProducto = () => {
                                                 </span>
                                             </label>
 
-                                            <label
-                                                htmlFor="mobile-low-price"
-                                                className="flex gap-2 items-center"
-                                            >
+                                            <label className="flex gap-2 items-center">
                                                 <input
                                                     type="radio"
-                                                    id="mobile-low-price"
                                                     name="mobile-filter"
                                                     checked={selectedFilter === "low-price"}
                                                     onChange={() => handleFilterChange("low-price")}
@@ -166,9 +172,9 @@ const CategoriaProducto = () => {
                                 )}
                             </div>
 
-                            {/* Seccion de filtro y productos de la categoria */}
+                            {/* Contenido principal */}
                             <div className="mt-4 md:mt-8 md:grid md:grid-cols-4 md:items-start md:gap-6 lg:gap-8">
-                                {/* Sidebar - visible desde md */}
+                                {/* Filtros para desktop */}
                                 <div className="hidden md:block md:col-span-1">
                                     <p className="block text-xs font-medium text-gray-700">
                                         Filtros
@@ -205,26 +211,18 @@ const CategoriaProducto = () => {
                                             </button>
                                         </div>
                                         <div className="p-4 flex flex-col gap-2">
-                                            <label
-                                                htmlFor="high-price"
-                                                className="flex gap-2 items-center cursor-pointer"
-                                            >
+                                            <label className="flex gap-2 items-center cursor-pointer">
                                                 <input
                                                     type="radio"
-                                                    id="high-price"
                                                     name="filter"
                                                     checked={selectedFilter === "high-price"}
                                                     onChange={() => handleFilterChange("high-price")}
                                                 />
                                                 <i>Mayor precio</i>
                                             </label>
-                                            <label
-                                                htmlFor="low-price"
-                                                className="flex gap-2 items-center cursor-pointer"
-                                            >
+                                            <label className="flex gap-2 items-center cursor-pointer">
                                                 <input
                                                     type="radio"
-                                                    id="low-price"
                                                     name="filter"
                                                     checked={selectedFilter === "low-price"}
                                                     onChange={() => handleFilterChange("low-price")}
@@ -264,6 +262,7 @@ const CategoriaProducto = () => {
                                             </div>
                                         ))}
                                     </div>
+                                    
                                     {/* Paginación */}
                                     {products.pagination?.totalPages > 1 && (
                                         <div className="flex justify-center mt-8 gap-4">
@@ -275,15 +274,11 @@ const CategoriaProducto = () => {
                                                 <FaArrowLeft /> Anterior
                                             </button>
                                             <span className="px-4 py-2">
-                                                Página {currentPage} de{" "}
-                                                {products.pagination?.totalPages}
+                                                Página {currentPage} de {products.pagination?.totalPages}
                                             </span>
-
                                             <button
                                                 onClick={handlePageChange.next}
-                                                disabled={
-                                                    currentPage === products.pagination?.totalPages
-                                                }
+                                                disabled={currentPage === products.pagination?.totalPages}
                                                 className="flex items-center gap-3 py-2 px-6 rounded-lg shadow-lg border-1 border-gray-400 text-sm text-gray-700 transition-all hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                             >
                                                 Siguiente <FaArrowRight />

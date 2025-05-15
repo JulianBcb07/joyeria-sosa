@@ -22,6 +22,13 @@ export function ProductProvider({ children }) {
 
   const [errors, setErrors] = useState([]);
 
+  const clearProducts = useCallback(() => {
+    setProducts({
+      data: [],
+      pagination: {}
+    });
+  }, []);
+
   const getProductsByCategory = useCallback(async (id, page, limit, sort = null) => {
     try {
       const res = await getProductsByCategoryRequest(id, page, limit, sort);
@@ -142,6 +149,7 @@ export function ProductProvider({ children }) {
       createProduct,
       updateProduct,
       deleteProduct,
+      clearProducts,
       errors
     }}>
       {children}

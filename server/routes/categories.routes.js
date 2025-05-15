@@ -40,7 +40,7 @@ routerCategories.get("/allCategorias", getAllCategories);
 routerCategories.get("/categorias", authRequired, getCategories);
 
 // obtener una categoria por su id
-routerCategories.get("/categoria/:id", authRequired, getCategory);
+routerCategories.get("/categoria/:id", getCategory);
 
 // crear una categoria
 routerCategories.post(
