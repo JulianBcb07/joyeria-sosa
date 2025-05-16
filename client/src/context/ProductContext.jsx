@@ -64,7 +64,6 @@ export function ProductProvider({ children }) {
   const getProduct = useCallback(async (id) => {
     try {
       const res = await getProductRequest(id);
-      setProduct(res.data);
       return res.data;
     } catch (error) {
       // console.error(error);
