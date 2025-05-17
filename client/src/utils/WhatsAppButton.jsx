@@ -10,7 +10,7 @@ const WhatsAppButton = ({ product }) => {
     // const message = `Hola, me interesa este producto: \n*${product.name}*\n*Precio: $${product.price}*\n¿Me podría dar más información?`;
 
     const message = `¡Hola! Vi este producto en su catálogo:
-    *Enlace al producto*: http://localhost:5173/producto/${product.id_product}
+    *Enlace al producto*: ${import.meta.env.VITE_API_URL}producto/${product.id_product}
     *Detalles:*
     - Nombre: ${product.name}
     - Precio: $${product.price}  

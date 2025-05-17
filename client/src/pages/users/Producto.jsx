@@ -48,7 +48,7 @@ const Producto = () => {
                 <div className='absolute -top-28 -left-28 w-[500px] h-[500px] bg-gradient-to-tr from-indigo-500/20 to-pink-500/20 rounded-full blur-[80px] -z-10'></div>
                 <div className='overflow-hidden'>
                     <Navbar />
-                    <div className='flex justify-center items-center h-64'>
+                    <div className='flex justify-center items-center my-64 h-40'>
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                     </div>
                     <Footer />
@@ -90,7 +90,7 @@ const Producto = () => {
                                 src={currentProduct.img_product} 
                                 alt={currentProduct.name} 
                                 onError={(e) => {
-                                    e.target.src = '/path-to-default-image.jpg'
+                                    e.target.src = '../../src/assets/no-image.webp';
                                 }}
                             />
                         </div>

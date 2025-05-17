@@ -246,6 +246,9 @@ const CategoriaProducto = () => {
                                                         className="h-64 w-full object-cover rounded-t-xl"
                                                         src={producto.img_product}
                                                         alt={producto.name}
+                                                        onError={(e) => {
+                                                            e.target.src = '../../src/assets/no-image.webp'
+                                                        }}
                                                     />
                                                     <div className="px-4 py-5">
                                                         <p className="text-gray-400 uppercase text-xs">
