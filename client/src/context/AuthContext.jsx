@@ -95,16 +95,14 @@ const logout = async () => {
   const location = useLocation();
 
   useEffect(() => {
-    const isPublicRoute = () => {
-      const publicPaths = ["/", "/admin/login", "/categoria", "/producto"];
-      return publicPaths.some((path) => location.pathname.startsWith(path));
-    };
-  
-    if (isPublicRoute()) {
-      setLoading(false);
+    const publicRoutes = ["/", "/admin/login", "/categoria", "/producto"];
+    const isPublicRoute = publicRoutes.some(path => location.pathname.startsWith(path));
+    // Si la ruta es pública, no hacemos la verificación del token
+    if (isPublicRoute) {
+      setLoading(false);  // Setea loading en false inmediatamente en rutas públicas
       return;
     }
-  
+
     async function checkLogin() {
       try {
         const res = await verifyTokenRequest();
@@ -116,12 +114,14 @@ const logout = async () => {
           setUser(null);
         }
       } catch (error) {
+        // Puedes eliminar este catch si usás validateStatus
         setIsAuthenticated(false);
         setUser(null);
       } finally {
         setLoading(false);
       }
     }
+
     checkLogin();
   }, [location.pathname]);
   
