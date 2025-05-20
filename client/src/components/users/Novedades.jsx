@@ -8,7 +8,7 @@ const Novedades = () => {
             <div className='flex flex-col md:flex-row items-center justify-between gap-12 md:gap-24'>
                 {/* Izquierda */}
                 <div className='md:w-1/2 w-full'>
-                    <img src={scheduleImage} alt="scheduale image" className='w-full h-auto rounded-2xl shadow-2xl hover:scale-[1.02] transition-transform duration-300' />
+                    <img src={scheduleImage} alt="scheduale image" loading='lazy' className='w-full h-auto rounded-2xl shadow-2xl hover:scale-[1.02] transition-transform duration-300' />
                 </div>
 
 

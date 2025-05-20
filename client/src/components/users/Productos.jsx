@@ -36,12 +36,16 @@ const Productos = () => {
                     <span className='text-blue-800'>Aún no hay categorías creadas</span>
                 </div>
             )}
-            
-            <div className='w-fit mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-5 justify-items-center justify-center gap-y-16 gap-x-16 mt-10 mb-5'>
+
+            <div className='w-fit mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-5 justify-items-center justify-center gap-y-12 gap-x-15 mt-10 mb-5'>
                 {categories.data?.map((category) => (
                     <div key={category.id_category} className='bg-white w-80 sm:w-72 md:w-62 lg:w-80 shadow-md rounded-xl hover:scale-105 duration-300 hover:shadow-xl'>
                         <Link to={`/categoria/${category.slug}`}>
-                            <img className='h-64 w-80 object-cover rounded-t-xl ' src={category.img_category} alt={category.name} />
+                            <div className='aspect-[4/3] w-full'>
+                                <img className='w-full h-full object-cover rounded-t-xl ' src={category.img_category} alt={category.name} onError={(e) => {
+                                    e.target.src = '/no-image.webp';
+                                }} />
+                            </div>
                             <div className='px-4 py-5 w-72'>
                                 <span className='text-gray-400 mr-3 uppercase text-xs'>Obtener</span>
                                 <p className='text-lg font-bold text-black truncate block capitalize'>{category.name}</p>

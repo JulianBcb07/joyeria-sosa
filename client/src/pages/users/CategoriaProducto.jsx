@@ -243,14 +243,17 @@ const CategoriaProducto = () => {
                                                 className="bg-white shadow-md rounded-xl hover:scale-105 duration-300 hover:shadow-xl"
                                             >
                                                 <Link to={`/producto/${producto.slug}`}>
+                                                <div className="aspect-[4/3] w-full">
+
                                                     <img
-                                                        className="h-64 w-full object-cover rounded-t-xl "
+                                                        className="h-full w-full object-cover rounded-t-xl "
                                                         src={producto.img_product}
                                                         alt={producto.name}
                                                         onError={(e) => {
-                                                            e.target.src = '../../src/assets/no-image.webp'
+                                                            e.target.src = '/no-image.webp';
                                                         }}
-                                                    />
+                                                        />
+                                                        </div>
                                                     <div className="px-4 py-5">
                                                         <p className="text-gray-400 uppercase text-xs">
                                                             Obtener

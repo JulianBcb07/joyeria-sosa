@@ -82,9 +82,7 @@ export const createCategory = async (req, res) => {
 
     // obtener la URL de la imagen que se ha subido
     const img_category = req.file
-      ? `${req.protocol}://${req.get("host")}/uploads/categorias/${
-          req.file.filename
-        }`
+      ? `${process.env.BACKEND_URL}/uploads/categorias/${req.file.filename}`
       : null;
 
     const [result] = await pool.query(
@@ -108,32 +106,34 @@ export const updateCategory = async (req, res) => {
   try {
     const { name, description, id_user } = req.body;
 
-    const slug = await generateUniqueSlug(name, req.params.id);
-
-    // 1. Obtener la imagen de categoría actual de la base de datos
-    const [category] = await pool.query(
-      "SELECT img_category FROM category_products WHERE id_category = ?",
+    // 1. Obtener la categoría actual
+    const [categoryResult] = await pool.query(
+      "SELECT name, slug, img_category FROM category_products WHERE id_category = ?",
       [req.params.id]
     );
 
-    if (category.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Imagen de categoria no encontrada" });
+    if (categoryResult.length === 0) {
+      return res.status(404).json({ message: "Categoría no encontrada" });
     }
 
-    let img_category = category[0].img_category; // Mantener la imagen actual por defecto
+    const existingCategory = categoryResult[0];
 
+    // 2. Solo generar nuevo slug si el nombre ha cambiado
+    let slug = existingCategory.slug;
+    if (existingCategory.name !== name) {
+      slug = await generateUniqueSlug(name, req.params.id, "category_products");
+    }
+
+    // 3. Manejo de imagen
+    let img_category = existingCategory.img_category;
     // 2. Solo procesar si se subió una nueva imagen
     if (req.file) {
       // Construir nueva URL
-      img_category = `${req.protocol}://${req.get("host")}/uploads/categorias/${
-        req.file.filename
-      }`;
+      img_category = `${process.env.BACKEND_URL}/uploads/categorias/${req.file.filename}`;
 
-      // 3. Eliminar la imagen anterior si existe
-      if (category[0].img_category) {
-        const oldImageName = category[0].img_category.split("/").pop();
+      // Eliminar la imagen anterior si existe
+      if (existingCategory.img_category) {
+        const oldImageName = existingCategory.img_category.split("/").pop();
         const oldImagePath = path.join(
           __dirname,
           "../uploads/categorias",

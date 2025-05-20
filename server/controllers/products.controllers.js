@@ -152,9 +152,7 @@ export const createProduct = async (req, res) => {
 
     // obtener la URL de la imagen que se ha subido
     const img_product = req.file
-      ? `${req.protocol}://${req.get("host")}/uploads/productos/${
-          req.file.filename
-        }`
+      ? `${process.env.BACKEND_URL}/uploads/productos/${req.file.filename}`
       : null;
 
     let slug;
@@ -222,9 +220,7 @@ export const updateProduct = async (req, res) => {
     // procesar si se subio una nueva imagen
     if (req.file) {
       // agregamos la URL para cambiar la imagen
-      img_product = `${req.protocol}://${req.get("host")}/uploads/productos/${
-        req.file.filename
-      }`;
+      img_product = `${process.env.BACKEND_URL}/uploads/productos/${req.file.filename}`;
 
       // eliminamos la imagen anterior si existe
       if (product[0].img_product) {

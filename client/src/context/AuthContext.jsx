@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      console.log(res.data);
+      // console.log(res.data);
       setUser(res.data);
       setIsAuthenticated(true);
     } catch (error) {
@@ -57,6 +57,7 @@ const logout = async () => {
     // 4. Opcional: Redirige al login (puedes hacerlo aquí o en el componente)
   } catch (error) {
     console.error("Error al cerrar sesión:", error);
+    
     // Maneja el error si es necesario
   }
 };
@@ -94,15 +95,16 @@ const logout = async () => {
   const location = useLocation();
 
   useEffect(() => {
-    const publicRoutes = ["/", "/login", "/register"];
-    const isPublicRoute = publicRoutes.includes(location.pathname);
-
-    // Si estoy en una ruta pública, no hace falta verificar el token
-    if (isPublicRoute) {
+    const isPublicRoute = () => {
+      const publicPaths = ["/", "/admin/login", "/categoria", "/producto"];
+      return publicPaths.some((path) => location.pathname.startsWith(path));
+    };
+  
+    if (isPublicRoute()) {
       setLoading(false);
       return;
     }
-
+  
     async function checkLogin() {
       try {
         const res = await verifyTokenRequest();
@@ -114,16 +116,15 @@ const logout = async () => {
           setUser(null);
         }
       } catch (error) {
-        // Puedes eliminar este catch si usás validateStatus
         setIsAuthenticated(false);
         setUser(null);
       } finally {
         setLoading(false);
       }
     }
-
     checkLogin();
   }, [location.pathname]);
+  
 
   return (
     <AuthContext.Provider

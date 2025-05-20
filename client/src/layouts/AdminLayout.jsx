@@ -17,7 +17,8 @@ function AdminLayout() {
 
     // auth
     const { loading, isAuthenticated, logout } = useAuth();
-    console.log(loading, isAuthenticated);
+    // verificar si esta autenticado y carga
+    // console.log(loading, isAuthenticated);
     if (loading) return (
         <div className="flex items-center justify-center h-screen">
             <div className="relative">
