@@ -95,7 +95,7 @@ const logout = async () => {
   const location = useLocation();
 
   useEffect(() => {
-    const publicRoutes = ["/", "/admin/login", "/categoria", "/producto"];
+    const publicRoutes = ["/", "/categoria", "/producto"];
     const isPublicRoute = publicRoutes.some(path => location.pathname.startsWith(path));
     // Si la ruta es pública, no hacemos la verificación del token
     if (isPublicRoute) {
