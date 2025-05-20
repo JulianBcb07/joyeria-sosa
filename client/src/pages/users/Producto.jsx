@@ -103,16 +103,16 @@ const Producto = () => {
 
                         {/* Texto */}
                         <div className='max-w-xl w-full flex flex-col items-center md:items-start text-justify md:text-left'>
-                            <h2 className='text-center md:text-left text-2xl lg:text-3xl font-bold pb-2 break-words break-all'>
+                            <h2 className='text-center md:text-left text-2xl lg:text-3xl font-bold pb-2 break-words'>
                                 {currentProduct.name}
                             </h2>
-                            <p className='text-gray-600 text-md md:text-xl pb-3 break-words'>
+                            <p className='text-gray-600 text-md md:text-lg pb-3'>
                                 {currentProduct.recomendation}
                             </p>
                             <p className='text-xl sm:text-2xl font-medium pb-3'>
                                 ${currentProduct.price}
                             </p>
-                            <p className='text-gray-600 pb-5 whitespace-pre-line break-words break-all'>
+                            <p className='text-gray-600 pb-5 whitespace-pre-line break-words'>
                                 {currentProduct.description}
                             </p>
                             <WhatsAppButton product={currentProduct} />

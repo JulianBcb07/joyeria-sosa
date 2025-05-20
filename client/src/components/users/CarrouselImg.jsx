@@ -7,7 +7,7 @@ import slide4 from "../../assets/slide4.webp";
 
 const customTheme = {
     scrollContainer: {
-        base: "flex h-full snap-mandatory overflow-y-hidden overflow-x-hidden rounded-lg", // Removed scroll-smooth
+        base: "flex h-full snap-mandatory overflow-y-hidden overflow-x-hidden rounded-lg scroll-smooth", // Removed scroll-smooth
         snap: "snap-x",
     },
 };
