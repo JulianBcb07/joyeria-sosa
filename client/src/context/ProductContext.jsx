@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react'
-import { createProductRequest, deleteProductRequest, getProductRequest, getProductsByCategoryRequest, getProductsRequest, updateProductRequest } from '../api/products';
+import { createProductRequest, deleteProductRequest, getProductRequest, getProductsByCategoryRequest, getProductsRequest, getProductByIdRequest, updateProductRequest } from '../api/products';
 
 const ProductContext = createContext();
 
@@ -61,13 +61,26 @@ export function ProductProvider({ children }) {
 
   const [product, setProduct] = useState(null);
 
-  const getProduct = useCallback(async (id) => {
+  const getProduct = useCallback(async (slug) => {
     try {
-      const res = await getProductRequest(id);
+      const res = await getProductRequest(slug);
+      setProduct(res.data); // Asegúrate de guardar el producto en el estado
+      return res.data;
+    } catch (error) {
+      setProduct(null);
+      throw error; // Propagar el error para manejarlo en el componente
+    }
+  }, []);
+
+  const getProductById = useCallback(async (id) => {
+    try {
+      const res = await getProductByIdRequest(id);
+      setProduct(res.data); // Asegúrate de guardar el producto en el estado
       return res.data;
     } catch (error) {
       // console.error(error);
       setProduct(null);
+      throw error;
     }
   }, []);
 
@@ -145,6 +158,7 @@ export function ProductProvider({ children }) {
       getProductsByCategory,
       getProducts,
       getProduct,
+      getProductById,
       createProduct,
       updateProduct,
       deleteProduct,

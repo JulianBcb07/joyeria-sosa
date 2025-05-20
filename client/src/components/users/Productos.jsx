@@ -40,7 +40,7 @@ const Productos = () => {
             <div className='w-fit mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-5 justify-items-center justify-center gap-y-16 gap-x-16 mt-10 mb-5'>
                 {categories.data?.map((category) => (
                     <div key={category.id_category} className='bg-white w-80 sm:w-72 md:w-62 lg:w-80 shadow-md rounded-xl hover:scale-105 duration-300 hover:shadow-xl'>
-                        <Link to={`/categoria/${category.id_category}`}>
+                        <Link to={`/categoria/${category.slug}`}>
                             <img className='h-64 w-80 object-cover rounded-t-xl ' src={category.img_category} alt={category.name} />
                             <div className='px-4 py-5 w-72'>
                                 <span className='text-gray-400 mr-3 uppercase text-xs'>Obtener</span>

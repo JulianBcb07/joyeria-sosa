@@ -4,6 +4,7 @@ import {
   getProductsByCategory,
   getProducts,
   getProduct,
+  getProductBySlug,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -43,6 +44,9 @@ routerProducts.get("/productos", authRequired, getProducts);
 
 // obtener un producto por el id
 routerProducts.get("/producto/:id", getProduct);
+
+// nueva ruta para obtener producto por slug
+routerProducts.get("/producto/slug/:slug", getProductBySlug);
 
 // crear un producto
 routerProducts.post(

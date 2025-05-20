@@ -1,10 +1,11 @@
 // Archivo para crear las funciones del CRUD de productos
 
 // El pool me sirve para hacer consultas SQL
-import { pool } from "../db.js";
+import pool from "../db.js";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { generateUniqueSlug } from "../helpers/slugGenerator.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -126,6 +127,21 @@ export const getProduct = async (req, res) => {
   }
 };
 
+export const getProductBySlug = async (req, res) => {
+  try {
+    const [result] = await pool.query("SELECT * FROM products WHERE slug = ?", [
+      req.params.slug,
+    ]);
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+    res.json(result[0]);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const createProduct = async (req, res) => {
   try {
     const { name, recomendation, price, description, id_category, id_user } =
@@ -141,10 +157,20 @@ export const createProduct = async (req, res) => {
         }`
       : null;
 
+    let slug;
+    try {
+      slug = await generateUniqueSlug(name);
+    } catch (slugError) {
+      console.error("Error generando slug:", slugError);
+      // Fallback básico si falla la generación del slug
+      slug = `product-${Date.now()}`;
+    }
+
     const [result] = await pool.query(
-      "INSERT INTO products(name, recomendation, price, description, img_product, id_category, id_user) VALUES (?, ?, ?, ?, ? ,?, ?)",
+      "INSERT INTO products(name, slug, recomendation, price, description, img_product, id_category, id_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       [
         name,
+        slug,
         recomendation,
         price,
         description,
@@ -156,6 +182,7 @@ export const createProduct = async (req, res) => {
     res.json({
       id: result.insertId,
       name,
+      slug,
       recomendation,
       description,
       img_product,
@@ -169,6 +196,8 @@ export const updateProduct = async (req, res) => {
   try {
     const { name, recomendation, price, description, id_category, id_user } =
       req.body;
+
+    const slug = await generateUniqueSlug(name, req.params.id);
 
     // Conversión explícita a NULL si viene vacío
     const categoryId =
@@ -219,9 +248,10 @@ export const updateProduct = async (req, res) => {
 
     // actualizar los datos en la base de datos
     const result = await pool.query(
-      "UPDATE products SET name = ?, recomendation = ?, price = ?, description = ?, img_product = ?, id_category = ?, id_user = ? WHERE id_product = ?",
+      "UPDATE products SET name = ?, slug = ?, recomendation = ?, price = ?, description = ?, img_product = ?, id_category = ?, id_user = ? WHERE id_product = ?",
       [
         name,
+        slug,
         recomendation,
         price,
         description,

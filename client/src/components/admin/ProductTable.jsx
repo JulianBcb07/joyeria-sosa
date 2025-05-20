@@ -10,7 +10,7 @@ import MemoizedImage from '../../utils/MemoizedImage';
 
 function ProductTable() {
     const { products, getProducts, deleteProduct } = useProduct();
-    const {getAllCategories, categories} = useCategory(); // obtengo las categorias del contexto
+    const { getAllCategories, categories } = useCategory(); // obtengo las categorias del contexto
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
 
@@ -20,7 +20,7 @@ function ProductTable() {
 
     const getCategoryName = useMemo(() => {
         return (categoryId) => {
-            if(getAllCategories.data || !categoryId) return "Sin categoria";
+            if (getAllCategories.data || !categoryId) return "Sin categoria";
             const category = categories.data.find(cat => cat.id_category === categoryId);
             return category ? category.name : 'Categoria no encontrada';
         };
@@ -95,72 +95,76 @@ function ProductTable() {
 
     return (
         <div className='overflow-x-auto max-w-[calc(100vw-32px)] rounded-lg shadow'>
-            <table className="min-w-[600px] w-full table-auto">
-                <thead >
-                    <tr className='bg-gray-300 text-gray-700 uppercase text-sm'>
-                        <th className='py-3 px-6 text-left '>Id</th>
-                        <th className='py-3 px-6 text-left'>Nombre</th>
-                        <th className='py-3 px-6 text-left'>Recomendación</th>
-                        <th className='py-3 px-6 min-w-80 lg:min-w-full text-left'>Descripción</th>
-                        <th className='py-3 px-6 text-left'>Categoria</th>
-                        <th className='py-3 px-6 text-left'>Imagen</th>
-                        <th className='py-3 px-6 text-left'>Precio</th>
-                        <th className='py-3 px-6 text-center'>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody className='text-gray-700 bg-gray-50 text-sm'>
-                    {memoProducts.map((product) => (
-                        <tr key={`product-${product.id_product}`} className='border-b border-gray-200 hover:bg-gray-200/20'>
-                            <td className='py-3 px-6 text-left'>{product.id_product}</td>
-                            <td className='py-3 px-6 text-left'>{product.name}</td>
-                            <td className='py-3 px-6 text-left'>{product.recomendation}</td>
-                            <td className='py-3 px-6 min-w-80 lg:min-w-full text-left'>{product.description}</td>
-                            <td className='py-3 px-6 text-left'>{getCategoryName(product.id_category)}</td>
-                            <td className='py-3 px-6 text-left'>
-                                {product.img_product ? (
-                                    <MemoizedImage
-                                        src={product.img_product}
-                                        alt={product.name}
-                                        className="h-12 w-12 md:h-32 md:w-32 object-cover rounded-md"
-                                    />
-                                ) : (
-                                    <span className='text-gray-500'>Sin imagen</span>
-                                )}
-                            </td>
-                            <td className='py-3 px-6 text-left'>${product.price}</td>
-                            <td className='py-3 px-6 text-left'>
-                                <div className='flex  gap-5'>
-                                    <div className='bg-'>
-                                        <Link to={`${product.id_product}`} ><BiSolidEditAlt className='size-5 hover:text-blue-600 transition-all' /></Link>
-                                    </div>
-                                    <div>
-                                        <button onClick={() => handleDelete(product.id_product)}>
-                                            <MdDelete className="size-5 hover:text-red-600 transition-all" />
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
+            <div className="inline-block min-w-full align-middle">
+                <table className="min-w-[600px] w-full table-auto">
+                    <thead >
+                        <tr className='bg-gray-300 text-gray-700 uppercase text-sm'>
+                            <th className='py-3 px-6 text-left '>Id</th>
+                            <th className='py-3 px-6 text-left'>Nombre</th>
+                            <th className='py-3 px-6 text-left'>Recomendación</th>
+                            <th className='py-3 px-6 min-w-80 lg:min-w-full text-left'>Descripción</th>
+                            <th className='py-3 px-6 text-left'>Categoria</th>
+                            <th className='py-3 px-6 text-left'>Imagen</th>
+                            <th className='py-3 px-6 text-left'>Precio</th>
+                            <th className='py-3 px-6 text-center'>Acciones</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="py-5 px-6 bg-gray-50 flex justify-between items-center">
-                <p className="text-sm text-gray-500">
-                    {currentPage} de {totalPages} paginas
-                </p>
-                <div className="flex items-center gap-5">
-                    <button
-                        onClick={handlePageChange.prev}
-                        disabled={currentPage === 1}
-                        className="flex items-center gap-3 py-2 px-6 rounded-lg shadow-lg border-1 border-gray-400 text-sm text-gray-700 transition-all hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                    ><FaArrowLeft /> Anterior
-                    </button>
-                    <button
-                        onClick={handlePageChange.next}
-                        disabled={currentPage === totalPages || totalPages === 0}
-                        className="flex items-center gap-3 py-2 px-6 rounded-lg shadow-lg border-1 border-gray-400 text-sm text-gray-700 transition-all hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                    >Siguiente <FaArrowRight />
-                    </button>
+                    </thead>
+                    <tbody className='text-gray-700 bg-gray-50 text-sm'>
+                        {memoProducts.map((product) => (
+                            <tr key={`product-${product.id_product}`} className='border-b border-gray-200 hover:bg-gray-200/20'>
+                                <td className='py-3 px-6 text-left'>{product.id_product}</td>
+                                <td className='py-3 px-6 text-left'>{product.name}</td>
+                                <td className='py-3 px-6 text-left break-words max-w-[50px]'>{product.recomendation}</td>
+                                <td className='py-3 px-6 min-w-45 text-left break-words max-w-1'>{product.description}</td>
+                                <td className='py-3 px-6 text-left'>{getCategoryName(product.id_category)}</td>
+                                <td className='py-3 px-6 text-left'>
+                                    {product.img_product ? (
+                                        <MemoizedImage
+                                            src={product.img_product}
+                                            alt={product.name}
+                                            className="h-12 w-12 md:h-32 md:w-32 object-cover rounded-md"
+                                        />
+                                    ) : (
+                                        <span className='text-gray-500'>Sin imagen</span>
+                                    )}
+                                </td>
+                                <td className='py-3 px-6 text-left'>${product.price}</td>
+                                <td className='py-3 px-6 text-left'>
+                                    <div className='flex  gap-5'>
+                                        <div className='bg-'>
+                                            <Link to={`${product.id_product}`} ><BiSolidEditAlt className='size-5 hover:text-blue-600 transition-all' /></Link>
+                                        </div>
+                                        <div>
+                                            <button onClick={() => handleDelete(product.id_product)}>
+                                                <MdDelete className="size-5 hover:text-red-600 transition-all" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <div className="py-5 px-6 bg-gray-50 flex justify-between items-center w-full min-w-[600px]">
+                    <p className="text-sm text-gray-500">
+                        {currentPage} de {totalPages} páginas
+                    </p>
+                    <div className="flex items-center gap-5 flex-shrink-0">
+                        <button
+                            onClick={handlePageChange.prev}
+                            disabled={currentPage === 1}
+                            className="flex items-center gap-3 py-2 px-6 rounded-lg shadow-lg border border-gray-400 text-sm text-gray-700 transition-all hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <FaArrowLeft /> Anterior
+                        </button>
+                        <button
+                            onClick={handlePageChange.next}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                            className="flex items-center gap-3 py-2 px-6 rounded-lg shadow-lg border border-gray-400 text-sm text-gray-700 transition-all hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Siguiente <FaArrowRight />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

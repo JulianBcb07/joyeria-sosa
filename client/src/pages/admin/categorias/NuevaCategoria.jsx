@@ -46,31 +46,31 @@ function NuevaCategoria() {
     };
 
     const onSubmit = handleSubmit(async (data) => {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("id_user", user.id);
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("description", data.description);
+        formData.append("id_user", user.id);
 
-    if (data.img_category && data.img_category[0]) {
-        formData.append("img_category", data.img_category[0]);
-    }
+        if (data.img_category && data.img_category[0]) {
+            formData.append("img_category", data.img_category[0]);
+        }
 
-    // Elimina el try-catch, ya que los errores se manejan en el contexto
-    const { success } = isEditing 
-        ? await updateCategory(params.id, formData)
-        : await createCategory(formData);
+        // Elimina el try-catch, ya que los errores se manejan en el contexto
+        const { success } = isEditing
+            ? await updateCategory(params.id, formData)
+            : await createCategory(formData);
 
-    if (success) {
-        await Swal.fire({
-            title: "Hecho!",
-            text: `Categoría ${isEditing ? "actualizada" : "creada"} con éxito!`,
-            icon: "success",
-            draggable: true
-        });
-        navigate("/admin/categorias");
-    }
-    // Los errores ya se muestran automáticamente a través de categoryErrors
-});
+        if (success) {
+            await Swal.fire({
+                title: "Hecho!",
+                text: `Categoría ${isEditing ? "actualizada" : "creada"} con éxito!`,
+                icon: "success",
+                draggable: true
+            });
+            navigate("/admin/categorias");
+        }
+        // Los errores ya se muestran automáticamente a través de categoryErrors
+    });
 
     return (
         <>
@@ -79,8 +79,8 @@ function NuevaCategoria() {
                     {isEditing ? "Editar categoría" : "Nueva categoría"}
                 </h1>
                 <div className="bg-white py-10 px-6 max-w-4xl mx-auto shadow-lg rounded-lg">
-                    
-                {/* Mostrar errores del backend */}
+
+                    {/* Mostrar errores del backend */}
                     {categoryErrors.length > 0 && (
                         <div className="mb-4">
                             {categoryErrors.map((error, i) => (
@@ -90,11 +90,13 @@ function NuevaCategoria() {
                             ))}
                         </div>
                     )}
-                    
+
                     <form onSubmit={onSubmit} encType="multipart/form-data">
                         <input type="text" hidden {...register("id_user")} />
+
+                        {/* Título (50 caracteres máx) */}
                         <label htmlFor="" className="font-medium">
-                            Titulo
+                            Título
                         </label>
                         {errors.name && (
                             <p className="text-red-500 text-xs font-medium mt-1">
@@ -103,12 +105,20 @@ function NuevaCategoria() {
                         )}
                         <input
                             type="text"
-                            placeholder="nombre"
-                            {...register("name", { required: "El titulo es requerido" })}
+                            placeholder="Nombre de la categoría (máx. 50 caracteres)"
+                            {...register("name", {
+                                required: "El título es requerido",
+                                maxLength: {
+                                    value: 50,
+                                    message: "El título no puede exceder los 50 caracteres"
+                                }
+                            })}
+                            maxLength={50}
                             autoFocus
-                            className="w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            className="w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
 
+                        {/* Descripción (300 caracteres máx) */}
                         <label htmlFor="" className="font-medium">
                             Descripción
                         </label>
@@ -118,11 +128,20 @@ function NuevaCategoria() {
                             </p>
                         )}
                         <textarea
-                            type="text"
-                            placeholder="Descripcion..."
-                            {...register("description", { required: "La descripción es requerida" })}
-                            className="w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Descripción de la categoría (máx. 300 caracteres)"
+                            {...register("description", {
+                                required: "La descripción es requerida",
+                                maxLength: {
+                                    value: 300,
+                                    message: "La descripción no puede exceder los 300 caracteres"
+                                }
+                            })}
+                            maxLength={300}
+                            rows={5}
+                            className="w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
+
+                        {/* Imagen (sin cambios en funcionalidad) */}
                         <label htmlFor="" className="font-medium">
                             {isEditing
                                 ? "Cambiar imagen de categoría"
@@ -153,7 +172,7 @@ function NuevaCategoria() {
                                 required: !currentImage ? "La imagen es requerida" : false
                             })}
                             onChange={handleImageChange}
-                            className="w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            className="w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
 
                         {isEditing && (
@@ -164,7 +183,7 @@ function NuevaCategoria() {
 
                         <button
                             type="submit"
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-5 cursor-pointer"
+                            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-5 cursor-pointer"
                         >
                             {isEditing ? "Actualizar categoría" : "Crear categoría"}
                         </button>

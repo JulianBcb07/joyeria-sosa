@@ -1,6 +1,6 @@
 
 import { createContext, useCallback, useContext, useState } from 'react';
-import { createCategoryRequest, getCategoriesRequest, deleteCategoryRequest, getCategoryRequest, updateCategoryRequest, getAllCategoriesRequest } from '../api/categories';
+import { createCategoryRequest, getCategoriesRequest, deleteCategoryRequest, getCategoryRequest, getCategoryBySlugRequest, updateCategoryRequest, getAllCategoriesRequest } from '../api/categories';
 
 const CategoryContext = createContext();
 
@@ -48,6 +48,15 @@ export function CategoryProvider({ children }) {
     const getCategory = async (id) => {
         try {
             const res = await getCategoryRequest(id);
+            return res.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const getCategoryBySlug = async (slug) => {
+        try {
+            const res = await getCategoryBySlugRequest(slug);
             return res.data;
         } catch (error) {
             console.error(error);
@@ -128,6 +137,7 @@ export function CategoryProvider({ children }) {
             getAllCategories,
             getCategories,
             getCategory,
+            getCategoryBySlug,
             updateCategory,
             deleteCategory,
             errors

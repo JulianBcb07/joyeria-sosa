@@ -27,7 +27,7 @@ const Footer = () => {
                             <a href="" className='w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center to-gray-600 hover:bg-pink-600 hover:text-white transition-all duration-200'>
                                 <FaInstagram className='size-5' />
                             </a>
-                            <a href="" className='w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center to-gray-600 hover:bg-green-600 hover:text-white transition-all duration-200'>
+                            <a href="tel:985-100-1215" className='w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center to-gray-600 hover:bg-green-600 hover:text-white transition-all duration-200'>
                                 <FaWhatsapp />
                             </a>
                         </div>
@@ -43,11 +43,11 @@ const Footer = () => {
                                     <li className='flex flex-col gap-2'>
                                         <div className='flex gap-2'>
                                             <p className='text-gray-600'>Teléfono:</p>
-                                            <a href="tel:999-999-9999" aria-label='telefono' title='teléfono' className='text-gray-600 hover:text-gray-900'> 999-999-9999</a>
+                                            <a href="tel:985-100-1215" aria-label='telefono' title='teléfono' className='text-gray-600 hover:text-gray-900'>(+52) 985-100-1215</a>
                                         </div>
                                         <div className='flex gap-2'>
                                             <p className='text-gray-600'>Email:</p>
-                                            <a href="mailto:correo@correo.com" aria-label='correo' title='correo electrónico' className='text-gray-600 hover:text-gray-900'> correo@correo.com</a>
+                                            <a href="mailto:proyecto.sosajoyeria@gmail.com" aria-label='correo' title='correo electrónico' className='text-gray-600 hover:text-gray-900'>proyecto.sosajoyeria@gmail.com</a>
                                         </div>
                                         <div className='flex gap-2'>
                                             <p className='text-gray-600'>Dirección:</p>
@@ -64,7 +64,7 @@ const Footer = () => {
                 <div className='border-t border-gray-300 mt-8 pt-8'>
                     <div className='flex flex-col md:flex-row items-center justify-between gap-4'>
                         <p className='text-gray-600 text-sm'>Copyright © {new Date().getFullYear()} Sosa Joyería</p>
-                        <p className='text-600 text-sm'>Creado por Julian Bacab</p>
+                        <p className='text-gray-600 text-sm'>Creado por Julian Bacab</p>
                     </div>
                 </div>
 

@@ -31,8 +31,9 @@ function App() {
             <Routes>
               {/* Rutas publicas */}
               <Route path="/" element={<Home />} />
-              <Route path="/categoria/:id" element={<CategoriaProducto />} />
-              <Route path="/producto/:id" element={<Producto />} />
+              <Route path="/categoria/:slug" element={<CategoriaProducto />} />
+              <Route path="/producto/:slug" element={<Producto />} />
+              {/* <Route path="/producto/:id" element={<Producto />} /> */}
 
               {/* Rutas privadas - admin */}
               <Route path="/admin" element={<AdminLayout />}>

@@ -9,7 +9,7 @@ import { useCategory } from '../../../context/CategoryContext';
 
 function NuevoProducto() {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
-    const { createProduct, getProduct, updateProduct, errors: productErrors } = useProduct();
+    const { createProduct, getProductById, updateProduct, errors: productErrors } = useProduct();
     const { getAllCategories, categories } = useCategory();
     const navigate = useNavigate();
     const params = useParams();
@@ -22,7 +22,7 @@ function NuevoProducto() {
         getAllCategories();
         async function loadProduct() {
             if (isEditing) {
-                const product = await getProduct(params.id);
+                const product = await getProductById(params.id);
                 reset({
                     name: product.name,
                     recomendation: product.recomendation,
@@ -38,7 +38,7 @@ function NuevoProducto() {
             }
         }
         loadProduct();
-    }, [isEditing, params.id, getProduct, reset, user.id, getAllCategories]);
+    }, [isEditing, params.id, getProductById, reset, user.id, getAllCategories]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -100,42 +100,76 @@ function NuevoProducto() {
 
                     <form onSubmit={onSubmit} encType='multipart/form-data'>
                         <input type="text" hidden {...register("id_user")} />
-                        <label className='font-medium'>Titulo</label>
+
+                        {/* Título (70 caracteres máx) */}
+                        <label className='font-medium'>Título</label>
                         {errors.name && (
                             <p className="text-red-500 text-xs font-medium mt-1">
                                 {errors.name.message}
                             </p>
                         )}
-                        <input type="text" {...register("name", { required: "El titulo es requerido" })}
+                        <input
+                            type="text"
+                            {...register("name", {
+                                required: "El título es requerido",
+                                maxLength: {
+                                    value: 70,
+                                    message: "El título no puede exceder los 70 caracteres"
+                                }
+                            })}
+                            maxLength={70}
                             autoFocus
-                            className='w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600' placeholder='titulo' />
+                            className='w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600'
+                            placeholder='Título del producto (máx. 70 caracteres)'
+                        />
 
+                        {/* Recomendación (80 caracteres máx) */}
                         <label className='font-medium'>Recomendación</label>
                         {errors.recomendation && (
                             <p className="text-red-500 text-xs font-medium mt-1">
                                 {errors.recomendation.message}
                             </p>
                         )}
-                        <input type="text" {...register("recomendation", { required: "La recomendación es requerida" })} className='w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600' placeholder='juvenil, dama, etc..' />
+                        <input
+                            type="text"
+                            {...register("recomendation", {
+                                required: "La recomendación es requerida",
+                                maxLength: {
+                                    value: 80,
+                                    message: "La recomendación no puede exceder los 80 caracteres"
+                                }
+                            })}
+                            maxLength={80}
+                            className='w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600'
+                            placeholder='Ej: juvenil, dama, etc. (máx. 80 caracteres)'
+                        />
 
+                        {/* Precio (sin cambios) */}
                         <label className='font-medium'>Precio</label>
                         {errors.price && (
                             <p className="text-red-500 text-xs font-medium mt-1">
                                 {errors.price.message}
                             </p>
                         )}
-                        <input type="number" step={0.001} {...register("price", {
-                            required: "El precio es requerido",
-                            validate: {
-                                positive: (value) => parseFloat(value) >= 0 || "El precio no puede ser negativo",
-                                maxValue: (value) => parseFloat(value) <= 100000 || "El precio no puede exceder 100,000",
-                                decimalPlaces: (value) => {
-                                    const decimalPart = value.toString().split('.')[1];
-                                    return !decimalPart || decimalPart.length <= 3 || "Máximo 3 decimales permitidos";
+                        <input
+                            type="number"
+                            step={0.001}
+                            {...register("price", {
+                                required: "El precio es requerido",
+                                validate: {
+                                    positive: (value) => parseFloat(value) >= 0 || "El precio no puede ser negativo",
+                                    maxValue: (value) => parseFloat(value) <= 100000 || "El precio no puede exceder 100,000",
+                                    decimalPlaces: (value) => {
+                                        const decimalPart = value.toString().split('.')[1];
+                                        return !decimalPart || decimalPart.length <= 3 || "Máximo 3 decimales permitidos";
+                                    }
                                 }
-                            }
-                        })} className='w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600' placeholder='$' />
+                            })}
+                            className='w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600'
+                            placeholder='$'
+                        />
 
+                        {/* Categoría (sin cambios) */}
                         <label className='font-medium'>Categoría</label>
                         {errors.id_category && (
                             <p className="text-red-500 text-xs font-medium mt-1">
@@ -144,7 +178,7 @@ function NuevoProducto() {
                         )}
                         <select
                             {...register("id_category")}
-                            className='w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600'
+                            className='w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600'
                         >
                             <option value="">-- seleccionar categoría --</option>
                             {categories.data && categories.data.map(category => (
@@ -154,14 +188,28 @@ function NuevoProducto() {
                             ))}
                         </select>
 
+                        {/* Descripción (400 caracteres máx) */}
                         <label className='font-medium'>Descripción</label>
                         {errors.description && (
                             <p className="text-red-500 text-xs font-medium mt-1">
                                 {errors.description.message}
                             </p>
                         )}
-                        <textarea type="text" {...register("description", { required: "La descripción es requerida" })} className='w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600' />
+                        <textarea
+                            {...register("description", {
+                                required: "La descripción es requerida",
+                                maxLength: {
+                                    value: 400,
+                                    message: "La descripción no puede exceder los 400 caracteres"
+                                }
+                            })}
+                            maxLength={400}
+                            rows={6}  // Aumenté el número de filas para hacer más grande el área
+                            className='w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600'
+                            placeholder='Descripción detallada del producto (máx. 400 caracteres)'
+                        />
 
+                        {/* Resto del formulario (sin cambios) */}
                         <label htmlFor="" className="font-medium">
                             {isEditing
                                 ? "Cambiar imagen del producto"
@@ -182,12 +230,15 @@ function NuevoProducto() {
                                 />
                             </div>
                         )}
-                        <input type="file" name='img_product'
+                        <input
+                            type="file"
+                            name='img_product'
                             {...register("img_product", {
                                 required: !currentImage ? "La imagen es requerida" : false
                             })}
                             onChange={handleImageChange}
-                            className='w-full my-3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600' />
+                            className='w-full my-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600'
+                        />
 
                         {isEditing && (
                             <p className="text-sm text-gray-500">
@@ -195,8 +246,10 @@ function NuevoProducto() {
                             </p>
                         )}
 
-                        <button type="submit"
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-5 cursor-pointer">
+                        <button
+                            type="submit"
+                            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-5 cursor-pointer"
+                        >
                             {isEditing ? "Actualizar producto" : "Crear producto"}
                         </button>
                     </form>

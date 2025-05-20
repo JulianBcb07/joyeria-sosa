@@ -2,11 +2,12 @@
 
 // el [req.params.id] obtiene el id el parametro que se obtiene por la url para hacer una consulta.
 
-import { pool } from "../db.js";
+import pool from "../db.js";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { json } from "stream/consumers";
+import { generateUniqueSlug } from "../helpers/slugGenerator.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,6 +78,8 @@ export const createCategory = async (req, res) => {
   try {
     const { name, description, id_user } = req.body;
 
+    const slug = await generateUniqueSlug(name, null, "category_products");
+
     // obtener la URL de la imagen que se ha subido
     const img_category = req.file
       ? `${req.protocol}://${req.get("host")}/uploads/categorias/${
@@ -85,12 +88,14 @@ export const createCategory = async (req, res) => {
       : null;
 
     const [result] = await pool.query(
-      "INSERT INTO category_products(name, description, id_user, img_category) VALUES (?, ?, ?, ?)",
-      [name, description, id_user, img_category]
+      "INSERT INTO category_products(name, slug, description, id_user, img_category) VALUES (?, ?, ?, ?, ?)",
+      [name, slug, description, id_user, img_category]
     );
+
     res.json({
       id: result.insertId,
       name,
+      slug,
       description,
       img_category,
     });
@@ -102,6 +107,8 @@ export const createCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
   try {
     const { name, description, id_user } = req.body;
+
+    const slug = await generateUniqueSlug(name, req.params.id);
 
     // 1. Obtener la imagen de categoría actual de la base de datos
     const [category] = await pool.query(
@@ -146,13 +153,31 @@ export const updateCategory = async (req, res) => {
 
     // 4. Actualizar en la base de datos
     const [result] = await pool.query(
-      "UPDATE category_products SET name = ?, description = ?, id_user = ?, img_category = ? WHERE id_category = ?",
-      [name, description, id_user, img_category, req.params.id]
+      "UPDATE category_products SET name = ?, slug = ?, description = ?, id_user = ?, img_category = ? WHERE id_category = ?",
+      [name, slug, description, id_user, img_category, req.params.id]
     );
 
     res.json(result);
   } catch (error) {
     console.error("Error al actualizar categoría:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// Nueva función para obtener categoría por slug
+export const getCategoryBySlug = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM category_products WHERE slug = ?",
+      [req.params.slug]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Categoría no encontrada" });
+    }
+
+    res.json(result[0]);
+  } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };

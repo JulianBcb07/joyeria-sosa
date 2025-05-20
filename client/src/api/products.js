@@ -25,10 +25,13 @@ export const getProductsByCategoryRequest = (id, page, limit, sort = null) => {
   return axios.get(`/api/productos/categoria/${id}?${params.toString()}`);
 };
 
+export const getProductRequest = (slug) =>
+  axios.get(`/api/producto/slug/${slug}`);
+
 export const getProductsRequest = (page, limit) =>
   axios.get(`/api/productos?page=${page}&limit=${limit}`);
 
-export const getProductRequest = (id) => axios.get(`/api/producto/${id}`);
+export const getProductByIdRequest = (id) => axios.get(`/api/producto/${id}`);
 
 export const createProductRequest = (producto) =>
   handleRequest(axios.post("/api/producto", producto));

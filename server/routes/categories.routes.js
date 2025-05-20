@@ -4,6 +4,7 @@ import { Router } from "express";
 import {
   getCategories,
   getCategory,
+  getCategoryBySlug,
   createCategory,
   updateCategory,
   deleteCategory,
@@ -41,6 +42,8 @@ routerCategories.get("/categorias", authRequired, getCategories);
 
 // obtener una categoria por su id
 routerCategories.get("/categoria/:id", getCategory);
+
+routerCategories.get("/categoria/slug/:slug", getCategoryBySlug);
 
 // crear una categoria
 routerCategories.post(

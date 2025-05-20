@@ -23,6 +23,9 @@ export const getCategoriesRequest = (page, limit) =>
 
 export const getCategoryRequest = (id) => axios.get(`/api/categoria/${id}`);
 
+export const getCategoryBySlugRequest = (slug) =>
+  axios.get(`/api/categoria/slug/${slug}`);
+
 export const createCategoryRequest = (categoria) =>
   handleRequest(axios.post("/api/categoria", categoria));
 

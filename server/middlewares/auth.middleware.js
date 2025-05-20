@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
-import { pool } from "../db.js";
+import pool from "../db.js";
 
 export const authRequired = async (req, res, next) => {
   try {

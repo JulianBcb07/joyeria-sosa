@@ -9,9 +9,9 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 const CategoriaProducto = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedFilter, setSelectedFilter] = useState(null);
-    const { id } = useParams();
+    const { slug } = useParams();
     const { products, getProductsByCategory, clearProducts } = useProduct();
-    const { getCategory } = useCategory();
+    const { getCategoryBySlug } = useCategory();
     const [currentCategory, setCurrentCategory] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
@@ -19,44 +19,45 @@ const CategoriaProducto = () => {
 
     useEffect(() => {
         let isMounted = true;
-        
+    
         const fetchData = async () => {
-            if (id) {
+            if (slug) {
                 setIsLoading(true);
                 clearProducts();
-                
+    
                 try {
-                    const sortParam = selectedFilter === "low-price" 
-                        ? "price-asc" 
-                        : selectedFilter === "high-price" 
-                            ? "price-desc" 
+                    const categoryData = await getCategoryBySlug(slug);
+    
+                    if (!categoryData || !categoryData.id_category) {
+                        throw new Error("Categoría no encontrada");
+                    }
+    
+                    const sortParam = selectedFilter === "low-price"
+                        ? "price-asc"
+                        : selectedFilter === "high-price"
+                            ? "price-desc"
                             : null;
-                    
-                    const [categoryData] = await Promise.all([
-                        getCategory(id),
-                        getProductsByCategory(id, currentPage, itemsPerPage, sortParam)
-                    ]);
-                    
+    
+                    await getProductsByCategory(categoryData.id_category, currentPage, itemsPerPage, sortParam);
+    
                     if (isMounted) {
                         setCurrentCategory(categoryData);
                     }
                 } catch (error) {
                     console.error("Error al cargar datos:", error);
-                    if (isMounted) {
-                        setCurrentCategory(null);
-                    }
+                    if (isMounted) setCurrentCategory(null);
                 } finally {
                     if (isMounted) setIsLoading(false);
                 }
             }
         };
-        
+    
         fetchData();
-        
+    
         return () => {
             isMounted = false;
         };
-    }, [id, currentPage, selectedFilter, getProductsByCategory, getCategory, clearProducts]);
+    }, [slug, currentPage, selectedFilter, getProductsByCategory, getCategoryBySlug, clearProducts]);
 
     const handleFilterChange = (filterType) => {
         setSelectedFilter(filterType);
@@ -241,9 +242,9 @@ const CategoriaProducto = () => {
                                                 key={producto.id_product}
                                                 className="bg-white shadow-md rounded-xl hover:scale-105 duration-300 hover:shadow-xl"
                                             >
-                                                <Link to={`/producto/${producto.id_product}`}>
+                                                <Link to={`/producto/${producto.slug}`}>
                                                     <img
-                                                        className="h-64 w-full object-cover rounded-t-xl"
+                                                        className="h-64 w-full object-cover rounded-t-xl "
                                                         src={producto.img_product}
                                                         alt={producto.name}
                                                         onError={(e) => {
