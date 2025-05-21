@@ -19,27 +19,27 @@ const CategoriaProducto = () => {
 
     useEffect(() => {
         let isMounted = true;
-    
+
         const fetchData = async () => {
             if (slug) {
                 setIsLoading(true);
                 clearProducts();
-    
+
                 try {
                     const categoryData = await getCategoryBySlug(slug);
-    
+
                     if (!categoryData || !categoryData.id_category) {
                         throw new Error("Categoría no encontrada");
                     }
-    
+
                     const sortParam = selectedFilter === "low-price"
                         ? "price-asc"
                         : selectedFilter === "high-price"
                             ? "price-desc"
                             : null;
-    
+
                     await getProductsByCategory(categoryData.id_category, currentPage, itemsPerPage, sortParam);
-    
+
                     if (isMounted) {
                         setCurrentCategory(categoryData);
                     }
@@ -51,9 +51,9 @@ const CategoriaProducto = () => {
                 }
             }
         };
-    
+
         fetchData();
-    
+
         return () => {
             isMounted = false;
         };
@@ -98,11 +98,11 @@ const CategoriaProducto = () => {
                             <div className="text-center mb-16">
                                 <h2 className="text-3xl font-bold mb-4">{currentCategory?.name || "Categoría"}</h2>
                                 <p className="text-gray-600 text-lg text-center">
-                                    {currentCategory?.description || 
-                                    "Descripción de la categoría no disponible."}
+                                    {currentCategory?.description ||
+                                        "Descripción de la categoría no disponible."}
                                 </p>
                             </div>
-                            
+
                             {/* Filtros para móviles */}
                             <div className="mt-8 block md:hidden">
                                 <button
@@ -240,20 +240,19 @@ const CategoriaProducto = () => {
                                         {products.data?.map((producto) => (
                                             <div
                                                 key={producto.id_product}
-                                                className="bg-white shadow-md rounded-xl hover:scale-105 duration-300 hover:shadow-xl"
+                                                className="bg-white shadow-md rounded-xl hover:scale-105 duration-300 hover:shadow-x overflow-hidden max-w-[330px] mx-auto sm:w-full "
                                             >
                                                 <Link to={`/producto/${producto.slug}`}>
-                                                <div className="aspect-[4/3] w-full">
-
-                                                    <img
-                                                        className="h-full w-full object-cover rounded-t-xl "
-                                                        src={producto.img_product}
-                                                        alt={producto.name}
-                                                        onError={(e) => {
-                                                            e.target.src = '/no-image.webp';
-                                                        }}
+                                                    <div className="aspect-[4/3] w-full">
+                                                        <img
+                                                            className="h-full w-full object-cover rounded-t-xl "
+                                                            src={producto.img_product}
+                                                            alt={producto.name}
+                                                            onError={(e) => {
+                                                                e.target.src = '/no-image.webp';
+                                                            }}
                                                         />
-                                                        </div>
+                                                    </div>
                                                     <div className="px-4 py-5">
                                                         <p className="text-gray-400 uppercase text-xs">
                                                             Obtener
@@ -269,7 +268,7 @@ const CategoriaProducto = () => {
                                             </div>
                                         ))}
                                     </div>
-                                    
+
                                     {/* Paginación */}
                                     {products.pagination?.totalPages > 1 && (
                                         <div className="flex justify-center mt-8 gap-4">

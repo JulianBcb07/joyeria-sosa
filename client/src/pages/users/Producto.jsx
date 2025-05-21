@@ -87,10 +87,10 @@ const Producto = () => {
             <div className="overflow-hidden">
                 <Navbar />
                 <section className='pt-20 md:pt-36 pb-16 container mx-auto px-4'>
-                    <div className='max-w-5xl mx-auto grid md:grid-cols-2 gap-5 items-center justify-center pt-4 md:p-5'>
+                    <div className='max-w-6xl mx-auto grid md:grid-cols-2 gap-5 items-center justify-center pt-4 md:p-5'>
 
                         {/* Imagen */}
-                        <div className='flex justify-center'>
+                        <div className='flex justify-center items-start'>
                             <img
                                 className='w-72 h-64 sm:w-80 md:w-96 md:h-96 object-cover rounded-2xl shadow-md hover:scale-105 duration-300 hover:shadow-xl'
                                 src={currentProduct.img_product}
@@ -103,7 +103,7 @@ const Producto = () => {
 
                         {/* Texto */}
                         <div className='max-w-xl w-full flex flex-col items-center md:items-start text-justify md:text-left'>
-                            <h2 className='text-center md:text-left text-2xl lg:text-3xl font-bold pb-2 break-words'>
+                            <h2 className='text-center md:text-left text-2xl lg:text-3xl font-bold px-4 sm:px-0 pb-2 break-words'>
                                 {currentProduct.name}
                             </h2>
                             <p className='text-gray-600 text-md md:text-lg pb-3'>
@@ -112,7 +112,7 @@ const Producto = () => {
                             <p className='text-xl sm:text-2xl font-medium pb-3'>
                                 ${currentProduct.price}
                             </p>
-                            <p className='text-gray-600 pb-5 whitespace-pre-line break-words'>
+                            <p className='text-gray-600 px-4 sm:px-0 pb-6 whitespace-pre-line break-words'>
                                 {currentProduct.description}
                             </p>
                             <WhatsAppButton product={currentProduct} />
